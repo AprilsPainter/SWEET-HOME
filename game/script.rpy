@@ -2,6 +2,7 @@
 define j = Character('윤지아')
 define y = Character('연살')
 
+default hp = 100
 default key = False
 default coin = False
 default floor_2_cond = False
@@ -9,9 +10,34 @@ default floor_3_cond = False
 default exit_cond = False
 default ate_strawberry_cake = False
 default ate_fish_cake = False
+default bathroom_event = False
+default have_MP3 = False
+default knife_event = False
+default oven_event = False
 
 label start:
     jump festival
+
+label game_over(cause: str):
+    "[게임 오버] {cause}"
+
+    menu:
+        "처음부터":
+            renpy.utter_restart()
+
+        "메인 화면":
+            renpy.full_restart()
+
+label hp(amount: int, cause: str = ""):
+    $ hp += amount
+    if amount > 0:
+        "{cause} HP가 {amount} 증가했습니다."
+
+    elif amount < 0:
+        "{cause} HP가 {amount} 감소했습니다."
+
+    if hp <= 0:
+        jump game_over("HP가 0이 되어 사망하였습니다.")
 
 label festival:
     k "(내는 김춘배, 평범한 회사원이다.)"
@@ -263,5 +289,100 @@ label fish_cake:
                 jump dining_room_menu
 
 label bathroom:
+    if bathroom_event == False:
+        k "오, 안은 생각보다 깔끔하네."
+
+        k "근데 여긴 왜 뭐가 나올 것 같이 생겼냐…?"
+
+        k "아무 일도 안 일어나겠지?"
+
+        "문 밖에서 누군가의 발걸음 소리가 들린다."
+
+        k "아니 이런 망할, 호랑이도 제 말하면 온다더니…!!"
+
+        "어느 칸에 숨을까?"
+
+        menu:
+            "1번 칸":
+                "발걸음 소리가 가까워졌다가 다시 멀어진다…"
+                k "Sh*t, 죽을 뻔 했네."
+
+                $ bathroom_event = True
+
+            "2번 칸":
+                "발걸음 소리가 가까워진다..."
+                k "아?"
+
+                jump game_over("자객에 의해 사망하였습니다.")
+
+            "3번 칸":
+                "발걸음 소리가 가까워진다..."
+                k "아?"
+
+                jump game_over("자객에 의해 사망하였습니다.")
+
+    else:
+        "화장실에서 나갈까?"
+        menu:
+            "나간다.":
+                jump dining_room_menu
+            
+            "화장실에 있는다.":
+                k "무언가 쓸 만한 게 있을지도 몰라."
+                # 조사 상태
 
 label kitchen:
+    k "으, 추워... 엄청 서늘하다."
+
+    k " 무슨 엘사가 다녀갔나…"
+
+    k " 여기도 빨리 보고 나가야지."
+
+    jump kitchen_menu
+
+label kitchen_menu:
+    menu:
+        "수납장":
+            "수납장을 열었다."
+            if have_MP3 == False:
+                k "...? 왜 여기에 MP3 플레이어가 있지?"
+                k "일단 챙겨둬야겠다."
+
+                $ have_MP3 = True
+
+                $ have_MP3 = True
+                jump kitchen_menu
+
+            else:
+                k "그렇지, 상식적으로 텅 빈 수납장을 또 열어봤자 뭐가 생기진 않겠지."
+
+                jump kitchen_menu
+
+        "냉장고":
+            "냉장고를 열었다."
+            k "뭐라 감상평을 말하기도 민망할 정도로 아무 것도 안 들어 있네."
+            
+            jump kitchen_menu
+
+        "식칼":
+            if knife_event == False:
+                k "악!"
+                call hp(-10, "식칼에 손이 베여")
+
+                $ knife_event = True
+
+            else:
+                k "두 번은 안 당한다."
+
+                jump kitchen_menu
+
+        "오븐":
+            "오븐을 열었다."
+            if oven_event == False:
+                k "으악 이게 뭐야!!"
+                k "아니 이 집 주방장은 생선 못 먹어 죽은 귀신이 들렸나 왜 자꾸 생선으로 거지같은 요리를 하는 거야!!"
+
+                $ oven_event = True
+
+            else:
+                k "썩은 정어리 파이 따위는 다시 보고 싶지 않아."
