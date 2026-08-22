@@ -3,6 +3,7 @@ define j = Character('윤지아')
 define y = Character('연살')
 
 default dead = False
+default hp = 100
 default key = False
 default coin = False
 default floor_2_cond = False
@@ -14,6 +15,34 @@ default assassin_event = False
 
 label start:
     jump festival
+default bathroom_event = False
+default have_MP3 = False
+default knife_event = False
+default oven_event = False
+
+label start:
+    jump festival
+
+label game_over(cause: str):
+    "[게임 오버] {cause}"
+
+    menu:
+        "처음부터":
+            renpy.utter_restart()
+
+        "메인 화면":
+            renpy.full_restart()
+
+label hp(amount: int, cause: str = ""):
+    $ hp += amount
+    if amount > 0:
+        "{cause} HP가 {amount} 증가했습니다."
+
+    elif amount < 0:
+        "{cause} HP가 {amount} 감소했습니다."
+
+    if hp <= 0:
+        jump game_over("HP가 0이 되어 사망하였습니다.")
 
 label festival:
     k "(내는 김춘배, 평범한 회사원이다.)"
