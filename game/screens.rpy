@@ -1,11 +1,6 @@
-﻿################################################################################
-## 초기화
-################################################################################
-
-init offset = -1
+﻿init offset = -1
 
 
-################################################################################
 ## 스타일
 ################################################################################
 
@@ -77,7 +72,6 @@ style frame:
 
 
 
-################################################################################
 ## 게임내 스크린
 ################################################################################
 
@@ -237,7 +231,7 @@ screen quick_menu():
     ## 다른 화면 위에 표시되는지 확인합니다.
     zorder 100
 
-    if quick_menu:
+    if QuickMenu:
 
         hbox:
             style_prefix "quick"
@@ -258,7 +252,7 @@ screen quick_menu():
 init python:
     config.overlay_screens.append("quick_menu")
 
-default quick_menu = True
+default QuickMenu = True
 
 style quick_menu is hbox
 style quick_button is default
@@ -300,13 +294,13 @@ screen navigation():
 
         else:
 
-            textbutton _("대사록") action ShowMenu("history")
+            # textbutton _("대사록") action ShowMenu("history")
 
             textbutton _("저장하기") action ShowMenu("save")
 
         textbutton _("불러오기") action ShowMenu("load")
 
-        textbutton _("환경설정") action ShowMenu("preferences")
+        textbutton _("설정") action ShowMenu("preferences")
 
         if _in_replay:
 
@@ -321,7 +315,7 @@ screen navigation():
         if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
 
             ## 도움말 메뉴는 모바일 디바이스와 맞지 않아 불필요합니다.
-            textbutton _("조작방법") action ShowMenu("help")
+            textbutton _("조작 방법") action ShowMenu("help")
 
         if renpy.variant("pc"):
 
@@ -595,7 +589,7 @@ screen load():
 
 screen file_slots(title):
 
-    default page_name_value = FilePageNameInputValue(pattern=_("{} 페이지"), auto=_("자동 세이브"), quick=_("퀵세이브"))
+    default PageNameValue = FilePageNameInputValue(pattern=_("{} 페이지"), auto=_("자동 세이브"), quick=_("퀵세이브"))
 
     use game_menu(title):
 
@@ -610,11 +604,11 @@ screen file_slots(title):
 
                 key_events True
                 xalign 0.5
-                action page_name_value.Toggle()
+                action PageNameValue.Toggle()
 
                 input:
                     style "page_label_text"
-                    value page_name_value
+                    value PageNameValue
 
             ## 파일 슬롯 그리드.
             grid gui.file_slot_cols gui.file_slot_rows:
@@ -972,7 +966,7 @@ screen help():
 
     tag menu
 
-    default device = "keyboard"
+    default Device = "keyboard"
 
     use game_menu(_("조작방법"), scroll="viewport"):
 
@@ -983,17 +977,17 @@ screen help():
 
             hbox:
 
-                textbutton _("키보드") action SetScreenVariable("device", "keyboard")
-                textbutton _("마우스") action SetScreenVariable("device", "mouse")
+                textbutton _("키보드") action SetScreenVariable("Device", "keyboard")
+                textbutton _("마우스") action SetScreenVariable("Device", "mouse")
 
                 if GamepadExists():
-                    textbutton _("게임패드") action SetScreenVariable("device", "gamepad")
+                    textbutton _("게임패드") action SetScreenVariable("Device", "gamepad")
 
-            if device == "keyboard":
+            if Device == "keyboard":
                 use keyboard_help
-            elif device == "mouse":
+            elif Device == "mouse":
                 use mouse_help
-            elif device == "gamepad":
+            elif Device == "gamepad":
                 use gamepad_help
 
 
@@ -1428,9 +1422,9 @@ screen bubble(who, what):
         text what:
             id "what"
 
-        default ctc = None
-        showif ctc:
-            add ctc
+        default Ctc = None
+        showif Ctc:
+            add Ctc
 
 style bubble_window is empty
 style bubble_namebox is empty
@@ -1510,7 +1504,7 @@ screen quick_menu():
 
     zorder 100
 
-    if quick_menu:
+    if QuickMenu:
 
         hbox:
             style "quick_menu"
