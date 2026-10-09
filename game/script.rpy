@@ -1,4 +1,4 @@
-# 캐릭터 정의 ------------------------------------------------------------
+﻿# 캐릭터 정의 ------------------------------------------------------------
 define c = Character('김춘배')
 define j = Character('윤지아')
 define y = Character('연살')
@@ -15,7 +15,7 @@ default Floor2Cond4 = False
 default Floor2Cond5 = False
 default QuizLife = 3
 default Answer = None
-default Quiz_Cleared_List = [False, False, False, False, False, False, False] 
+default Quiz_Cleared_List = [False, False, False, False, False, False, False]
 default HaveBottle = False
 default HaveHoney = False
 
@@ -328,7 +328,7 @@ label Restroom:
         menu:
             "나간다.":
                 jump DiningRoomMenu
-            
+
             "화장실에 있는다.":
                 c "무언가 쓸 만한 게 있을지도 몰라."
 
@@ -362,7 +362,7 @@ label KitchenMenu:
         "냉장고":
             "냉장고를 열었다."
             c "뭐라 감상평을 말하기에 민망할 정도로 텅 비어 있네."
-            
+
             jump Kitchen
 
         "식칼":
@@ -444,9 +444,9 @@ label QuizRoom:
 label LifeCheck:
     if QuizLife <= 0:
         c "이... 이게 무슨 느낌이지?"
-        "갑작스레 당신의 머리가 깨질듯이 아파옵니다."  
+        "갑작스레 당신의 머리가 깨질듯이 아파옵니다."
         c "안돼...!"
-        
+
         # 사망
 
     else:
@@ -466,7 +466,7 @@ label KoreanQuiz:
         hide text
         $ QuizLife -= 1
         jump LifeCheck
-    
+
     show text "{size=20}{b}[국어]]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n2. [재작년 / 제작년] 매출보다 높네." at truecenter
     $ Answer = renpy.input("정답을 입력하세요.").strip()
     hide text
@@ -493,7 +493,7 @@ label KoreanQuiz:
         pause 3.0
         hide text
         $ QuizLife -= 1
-        jump LifeCheck  
+        jump LifeCheck
 
 label EnglishQuiz:
     show text "{size=20}{b}[영어]{/b}\n\n다음 중 어법적으로 옳은 문장은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. Never have I have been to Korea.\n2. What you said yesterday were so terrible that I almost threw up.\n3. Do you know what he told to me?" at truecenter
@@ -511,7 +511,7 @@ label EnglishQuiz:
         jump LifeCheck
 
 label MathQuiz:
-    show text '{size=20}{b}[수학]{/b}\n\n마토와 인터가 함께 급식을 먹으러 가고 있었습니다.\n인터가 학생 A와 B의 삼각형 모양 머리를 보고 이렇게 말했습니다.\n"학생 A의 머리의 한 각이 학생 B의 머리의 한 각과 같고, 그 각들의 대응변의 길이가 각각 같으므로 학생 A의 머리와 학생 B의 머리는 합동이야."\n\n그러자 마토가 이렇게 말했습니다.\n"네 삼각형 모양 머리를 수직으로 가르는 직선을 그리면 그 직선의 그래프는 a가 0이 아닌 y=ax의 그래프로 나타나는데,\n이때 이 그래프는 a의 값과 관계 없이 반드시 (0, 1)의 점을 지나. 그러니까 네 두개골을 수직으로 가르는 직선을 그어 버리기 전에 조용히 하면 안 될까?"\n\n그때 지나가던 근초고왕이 이렇게 말했습니다.\n"이차방정식을 푸는 방법 중 하나인 인수분해는 각각 수 또는 식인 A와 B의 곱이 0일 때, A와 B 중 하나는 무조건 0이라는 원리를 이용해.\n나와 함께 백제의 전성기를 이끌지 않을래?"\n\n마지막으로 그들을 발견한 유 교수가 말했습니다.\n"어떤 소수를 기약분수로 바꾸어 나타낼 때, 분모의 소인수가 2, 3, 5뿐이면 그것은 유한소수이고 그렇지 않다면 그것은 순환소수야."\n\n\n위 글에서 옳은 말을 한 사람은 누구인지 [인터, 마토, 근초고왕, 유 교수] 중 맞는 것을 모두 쓰시오.' at truecenter
+    show text '{size=20}{b}[수학]{/b}\n\n마토와 인터가 함께 급식을 먹으러 가고 있었습니다.\n인터가 학생 A와 B의 삼각형 모양 머리를 보고 이렇게 말했습니다.\n"학생 A의 머리의 한 각이 학생 B의 머리의 한 각과 같고, 그 각들의 대변의 길이가 각각 같으므로 학생 A의 머리와 학생 B의 머리는 합동이야."\n\n그러자 마토가 이렇게 말했습니다.\n"네 삼각형 모양 머리를 수직으로 가르는 직선을 그리면 그 직선의 그래프는 a가 0이 아닌 y=ax의 그래프로 나타나는데,\n이때 이 그래프는 a의 값과 관계 없이 반드시 (0, 1)의 점을 지나. 그러니까 네 두개골을 수직으로 가르는 직선을 그어 버리기 전에 조용히 하면 안 될까?"\n\n그때 지나가던 근초고왕이 이렇게 말했습니다.\n"이차방정식을 푸는 방법 중 하나인 인수분해는 각각 수 또는 식인 A와 B의 곱이 0일 때, A와 B 중 하나는 무조건 0이라는 원리를 이용해.\n나와 함께 백제의 전성기를 이끌지 않을래?"\n\n마지막으로 그들을 발견한 유 교수가 말했습니다.\n"어떤 소수를 기약분수로 바꾸어 나타낼 때, 분모의 소인수가 2, 3, 5뿐이면 그것은 유한소수이고 그렇지 않다면 그것은 순환소수야."\n\n\n위 글에서 옳은 말을 한 사람은 누구인지 [인터, 마토, 근초고왕, 유 교수] 중 맞는 것을 모두 쓰시오.' at truecenter
     $ Answer = renpy.input("정답을 입력하세요.").strip()
     hide text
     if Answer == "근초고왕":
@@ -586,7 +586,7 @@ label ArtQuiz:
         jump LifeCheck
 
 label TechQuiz:
-    show text "{size=20}{b}[기술]{/b}\n\n벌꿀을 채취해 오세요." at truecenter    
+    show text "{size=20}{b}[기술]{/b}\n\n벌꿀을 채취해 오세요." at truecenter
 
 # ====================================================================================
 
