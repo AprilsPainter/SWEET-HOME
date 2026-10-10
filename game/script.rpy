@@ -26,21 +26,20 @@ default HaveHoney = False
 
 
 # 배경 이미지 정의
-image bg festival = "images/backgrounds/festival"
-image bg alley = "images/backgrounds/alley"
-image bg cellar = "images/backgrounds/cellar"
-image bg corridor = "images/backgrounds/corridor"
-image bg dining_room = "images/backgrounds/dining_room"
-image bg kitchen = "images/backgrounds/kitchen"
-image bg restroom = "images/backgrounds/restroom"
-image bg dark_room_1 = "images/backgrounds/dark_room_1"
-image bg quiz_room = "images/backgrounds/quiz_room"
-image bg terrace = "images/backgrounds/terrace"
-image bg bedroom = "images/backgrounds/bedroom"
-image bg dark_room_2 = "images/backgrounds/dark_room_2"
-image rooftop = "images/backgrounds/rooftop"
-image exit = "images/backgrounds/exit"
-
+image bg alley = "images/backgrounds/alley.png"
+image bg bedroom = "images/backgrounds/bedroom.png"
+image bg cellar = "images/backgrounds/cellar.png"
+image bg corridor = "images/backgrounds/corridor.png"
+image bg darkroom = "images/backgrounds/darkroom.png"
+image bg dining_room = "images/backgrounds/dining_room.png"
+image bg exit = "images/backgrounds/exit.png"
+image bg festival = "images/backgrounds/festival.png"
+image bg kitchen = "images/backgrounds/kitchen.png"
+image bg quiz_room = "images/backgrounds/quiz_room.png"
+image bg restroom = "images/backgrounds/restroom.png"
+image bg rooftop = "images/backgrounds/rooftop.png"
+image bg storage = "images/backgrounds/storage.png"
+image bg terrace = "images/backgrounds/terrace.png"
 
 # 스크린 정의 ------------------------------------------------------------
 
@@ -50,7 +49,8 @@ label start:
     jump Festival
 
 label Festival:
-    c "(내는 김춘배, 평범한 회사원이다.)"
+    scene bg festival
+    c "테스트용 대사"
     c "(오늘 회사 동료인 지아 씨와 벚꽃 축제에 다녀왔다.)"
     j "춘배 씨!"
     c "예?"
@@ -183,17 +183,17 @@ label CorridorMenu:
             if Coin:
                 "동전을 사용해서 잠금을 풀 수 있다."
                 "문을 열어볼까?"
-                    menu:
-                        "문을 연다.":
-                            jump DarkRoom1
+                menu:
+                    "문을 연다.":
+                        jump DarkRoom1
 
-                        "문을 열지 않는다.":
-                            jump Corridor
+                    "문을 열지 않는다.":
+                        jump Corridor
 
             else:
                 "특이한 모양의 잠금 장치가 있다."
                 "지금 가진 걸론 열 수 없다."
-                    jump Corridor
+                jump Corridor
 
         "식당":
             "식당으로 향하는 문이다."
