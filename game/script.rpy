@@ -3,51 +3,27 @@ define c = Character('김춘배')
 define j = Character('윤지아')
 define y = Character('연살')
 
-<<<<<<< HEAD
-default dead = False
-default hp = 100
-default key = False
-default coin = False
-default floor_2_cond = False
-default floor_3_cond = False
-default exit_cond = False
-default ate_strawberry_cake = False
-default ate_fish_cake = False
-default assassin_event = False
-
-label start:
-    jump festival
-default bathroom_event = False
-default have_MP3 = False
-default knife_event = False
-default oven_event = False
-=======
 # 변수 정의 --------------------------------------------------------------
-default Key = False
-default MasterKey = False
-default HaveMP3 = False
-default Coin = False
-default Floor2Cond1 = False
-default Floor2Cond2 = False
-default Floor2Cond3 = False
-default Floor2Cond4 = False
-default Floor2Cond5 = False
-default QuizLife = 3
+
+# 퀴즈
 default Answer = None
-default Quiz_Cleared_List = [False, False, False, False, False, False, False]
-default HaveBottle = False
-default HaveHoney = False
->>>>>>> dev
+default Cleared_KoreanQuiz = False
+default Cleared_EnglishQuiz = False
+default Cleared_MathQuiz = False
+default Cleared_ScienceQuiz = False
+default Cleared_HistoryQuiz = False
+default Cleared_SocietyQuiz = False
+default Cleared_ArtQuiz = False
+default Cleared_TechQuiz = False
 
-default ArtCleared = False
-default KoreanCleared = False
-default ScienceCleared = False
-default SocietyCleared = False
-default HistoryCleared = False
-default EnglishCleared = False
-default MathCleared = False
-default TechCleared = False
+# 아이템
+default CellarKey = False
+default MasterKey = False
+default GoldenCoin = False
+default GlassBottle = False
+default Honey_GlassBottle = False
 
+# 첫 방문
 default FirstCellar = True
 default FirstCorrior = True
 default FirstDiningRoom = True
@@ -106,6 +82,7 @@ label Festival:
     jump Alley
 
 label Alley:
+    scene bg alley
     c "(내가 지아 씨 집에 가는 날이 오게 될 줄이야.)"
     c "(근데 집 가는 길이 왜 이렇게 외진 곳이지?)"
     c "(이러다 괴한한테 머리 한 대 맞고 납치당하는 거 아냐?)"
@@ -116,6 +93,7 @@ label Alley:
     jump Cellar
 
 label Cellar:
+    scene bg cellar
     if FirstCellar:
         $ FirstCellar = False
         c "으윽, 머리야… 피 나는 건 아니겠지?"
@@ -342,31 +320,15 @@ label FishCake:
                 c "아악!!"
                 "케이크에서 동전 한 개가 나왔다."
                 "이빨이 나가 HP가 20 감소했다."
-<<<<<<< HEAD
 
                 $ ate_fish_cake = True
                 $ coin = True
-=======
->>>>>>> dev
 
                 jump DiningRoom
 
             "먹지 않는다.":
                 c "내가 잠깐 미쳤었나 보네, 이걸 먹을 생각을 하다니."
 
-<<<<<<< HEAD
-                jump dining_room_menu
-
-label bathroom:
-    if assassin_event == False:
-        k "오, 안은 생각보다 깔끔하네."
-        k "근데 여긴 왜 뭐가 나올 것 같이 생겼냐...?"
-        k "아무 일도 안 일어나겠지?"
-        "문 밖에서 누군가의 발걸음 소리가 들린다."
-        "그것은 점점 가까워지고 있었다."
-        k "아니 이런 망할, 호랑이도 제 말하면 온다더니...!!"
-        "어느 칸에 숨어야 하지?"
-=======
                 jump DiningRoom
 
 label Restroom:
@@ -378,25 +340,18 @@ label Restroom:
         "문 밖에서 누군가의 발걸음 소리가 들린다."
         c "아니 이런 망할, 호랑이도 제 말하면 온다더니…!!"
         "어느 칸에 숨을까?"
->>>>>>> dev
 
         $ Floor2Cond3 = True
 
         menu:
             "1번 칸":
-<<<<<<< HEAD
                 "당신은 1번 칸으로 잽싸게 들어갔다."
                 "..."
                 "발걸음 소리가 가까워졌다가, 다시 멀어진다..."
-                k "(죽을 뻔했네. 앞으로는 플래그를 세우는 대사 따위 뱉지 않겠어.)"
+                c "(죽을 뻔했네. 앞으로는 플래그를 세우는 대사 따위 뱉지 않겠어.)"
 
                 $ assassin_event = True
-                jump bathroom
-=======
-                "발걸음 소리가 가까워졌다가 다시 멀어진다…"
-                c "죽을 뻔 했네."
                 jump Restroom
->>>>>>> dev
 
             "2번 칸":
                 "당신은 2번 칸으로 잽싸게 들어갔다."
@@ -404,12 +359,7 @@ label Restroom:
                 "발걸음 소리가 가까워진다..."
                 c "아?"
 
-<<<<<<< HEAD
-                $ dead = True
-                $ renpy.full_restart()
-=======
                 # 사망
->>>>>>> dev
 
             "3번 칸":
                 "당신은 3번 칸으로 잽싸게 들어갔다."
@@ -417,16 +367,6 @@ label Restroom:
                 "발걸음 소리가 가까워진다..."
                 c "아?"
 
-<<<<<<< HEAD
-                $ dead = True
-                $ renpy.full_restart()
-
-
-    else:
-        k "다시는 하고 싶지 않은 경험이었다."
-
-label kitchen:
-=======
                 # 사망
 
     else:
@@ -801,4 +741,3 @@ label Terrace:
 
 label Bedroom:
     "침실."
->>>>>>> dev
