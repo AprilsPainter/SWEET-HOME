@@ -68,6 +68,8 @@ image bg restroom = "images/backgrounds/restroom.png"
 image bg rooftop = "images/backgrounds/rooftop.png"
 image bg storage = "images/backgrounds/storage.png"
 image bg terrace = "images/backgrounds/terrace.png"
+image bg game_over = "images/backgrounds/game_over.png"
+image bg game_clear = "images/backgrounds/game_clear.png"
 
 # 스크린 정의 ------------------------------------------------------------
 
