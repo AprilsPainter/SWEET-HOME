@@ -5,7 +5,10 @@ define y = Character('연살')
 
 # 변수 정의 --------------------------------------------------------------
 
+default HP = 100
+
 # 퀴즈
+default QuizLife = 3
 default Answer = None
 default Cleared_KoreanQuiz = False
 default Cleared_EnglishQuiz = False
@@ -22,10 +25,11 @@ default MasterKey = False
 default GoldenCoin = False
 default GlassBottle = False
 default Honey_GlassBottle = False
+default MP3 = False
 
 # 첫 방문
 default FirstCellar = True
-default FirstCorrior = True
+default FirstCorridor = True
 default FirstDiningRoom = True
 default FirstStrawberryCake = True
 default FirstFishCake = True
@@ -36,6 +40,14 @@ default FirstOven = True
 default FirstStorage = True
 default FirstQuizRoom = True
 default FirstTerrace = True
+
+# 진행 조건
+default Checked_StrawberryCake = False
+default Checked_FishCake = False
+default Checked_RestroomEvent = False
+default Checked_Kitchen = False
+default Ate_StrawberryCake = False
+default Ate_FishCake = False
 
 # 이미지 정의 ------------------------------------------------------------
 
@@ -116,11 +128,11 @@ label CellarMenu:
             jump Suitcase
 
         "나무 문":
-            if Key:
-                jump DoorWithKey
+            if CellarKey:
+                jump DoorWithCellarKey
 
             else:
-                jump DoorWithoutKey
+                jump DoorWithoutCellarKey
 
 label Chest:
     c "으, 이게 뭐야... 물컹거리는데…?"
@@ -143,11 +155,11 @@ label Suitcase:
     c "열쇠다!"
     c "이거라면 문을 열 수 있지 않을까?"
 
-    $ Key = True
+    $ CellarKey = True
 
     jump Cellar
 
-label DoorWithoutKey:
+label DoorWithoutCellarKey:
     "열쇠가 필요하다."
     c "그냥 풀파워로 치면 열릴 것 같긴 한데… 어쩌지?"
 
@@ -163,7 +175,7 @@ label DoorWithoutKey:
 
             jump Cellar
 
-label DoorWithKey:
+label DoorWithCellarKey:
     c "제발 이 열쇠가 맞기를…"
     c "열렸다!"
     c "드디어 이 지긋지긋한 공간에서 나갈 수 있어!"
@@ -171,8 +183,9 @@ label DoorWithKey:
     jump Corridor
 
 label Corridor:
-    if FirstCorrior:
-        $ FirstCorrior = False
+    scene bg corridor
+    if FirstCorridor:
+        $ FirstCorridor = False
         c "드디어 나왔다! 그런데 밖이 아니네?"
         c "여기서 나가자마자 범인에게 곤장 100대를 치겠어…"
         c "이제 어디로 가야하지?"
@@ -191,7 +204,7 @@ label CorridorMenu:
                 jump Corridor
 
         "2층 계단":
-            if Floor2Cond1 and Floor2Cond2 and Floor2Cond3 and Floor2Cond4 and Floor2Cond5:
+            if Checked_StrawberryCake and Checked_FishCake and Checked_RestroomEvent and Checked_Kitchen:
                 jump QuizRoom
 
             else:
@@ -201,7 +214,7 @@ label CorridorMenu:
                 jump Corridor
 
         "창고":
-            if Coin:
+            if GoldenCoin:
                 "동전을 사용해서 잠금을 풀 수 있다."
                 "문을 열어볼까?"
                 menu:
@@ -228,13 +241,14 @@ label CorridorMenu:
                     jump Corridor
 
 label DiningRoom:
+    scene bg dining_room
     if FirstDiningRoom:
         $ FirstDiningRoom = False
         c "여기가 식당인가? 엄청 크네."
         c "잠깐만, 그럼 먹을 것도 많으려나?!"
         c "조금만 구경해 봐야지!"
 
-        jump DiningRoomMenu
+    jump DiningRoomMenu
 
 label DiningRoomMenu:
     menu:
@@ -245,7 +259,7 @@ label DiningRoomMenu:
                     jump Corridor
 
                 "더 둘러본다.":
-                    jump DiningRoom
+                    jump DiningRoomMenu
 
         "딸기 케이크":
             jump StrawberryCake
@@ -272,66 +286,60 @@ label DiningRoomMenu:
                     jump DiningRoomMenu
 
 label StrawberryCake:
-    if not FirstStrawberryCake:
-        $ FirstStrawberryCake = False
+    if Ate_StrawberryCake:
         c "참 맛있었지... 좀 찝찝하긴 하지만."
-
-        jump DiningRoom
+        jump DiningRoomMenu
 
     else:
         "맛있어 보이는 딸기 케이크다."
         "위험해 보이지는 않는데, 먹어볼까?"
 
-        $ Floor2Cond1 = True
-
         menu:
             "먹는다.":
+                $ Ate_StrawberryCake = True
+                $ Checked_StrawberryCake = True
                 c "…"
                 c "오! 맛있다."
+                $ HP = min(HP + 10, 100)
                 "딸기 케이크의 힘으로 HP가 10 증가했습니다."
-
-                jump DiningRoom
+                jump DiningRoomMenu
 
             "먹지 않는다.":
-
                 c "(아무래도 이런 곳에 있는 음식을 먹는 건 좀 그래.)"
-
-                jump DiningRoom
+                $ Checked_StrawberryCake = True
+                jump DiningRoomMenu
 
 label FishCake:
-    if not FirstFishCake:
-        $ FirstFishCake = False
+    if Ate_FishCake:
         c "......"
         c "아무거나 주워 먹으면 안된다는 교훈을 얻었지."
-
-        jump DiningRoom
+        jump DiningRoomMenu
 
     else:
         "절대 먹고 싶지 않게 생긴 생선 대가리 케이크다."
         "누가 이딴 재료로 케이크를 만들 생각을 했을까?"
         "…먹어볼까?"
 
-        $ Floor2Cond2 = True
-
         menu:
             "먹는다.":
+                $ Ate_FishCake = True
+                $ Checked_FishCake = True
+                $ GoldenCoin = True
                 c "…"
                 "까득!"
                 c "아악!!"
                 "케이크에서 동전 한 개가 나왔다."
                 "이빨이 나가 HP가 20 감소했다."
-
-                $ ate_fish_cake = True
-                $ coin = True
-
-                jump DiningRoom
+                $ HP = max(HP - 20, 0)
+                jump DiningRoomMenu
 
             "먹지 않는다.":
+                $ Checked_FishCake = True
                 c "내가 잠깐 미쳤었나 보네, 이걸 먹을 생각을 하다니."
-
-                jump DiningRoom
+                jump DiningRoomMenu
 
 label Restroom:
+    scene bg restroom
     if FirstRestroom:
         $ FirstRestroom = False
         c "오, 안은 생각보다 깔끔하네."
@@ -341,8 +349,6 @@ label Restroom:
         c "아니 이런 망할, 호랑이도 제 말하면 온다더니…!!"
         "어느 칸에 숨을까?"
 
-        $ Floor2Cond3 = True
-
         menu:
             "1번 칸":
                 "당신은 1번 칸으로 잽싸게 들어갔다."
@@ -350,7 +356,7 @@ label Restroom:
                 "발걸음 소리가 가까워졌다가, 다시 멀어진다..."
                 c "(죽을 뻔했네. 앞으로는 플래그를 세우는 대사 따위 뱉지 않겠어.)"
 
-                $ assassin_event = True
+                $ Checked_RestroomEvent = True
                 jump Restroom
 
             "2번 칸":
@@ -359,7 +365,9 @@ label Restroom:
                 "발걸음 소리가 가까워진다..."
                 c "아?"
 
-                # 사망
+                $ Checked_RestroomEvent = True
+                jump Restroom
+                # TODO: 사망 처리
 
             "3번 칸":
                 "당신은 3번 칸으로 잽싸게 들어갔다."
@@ -367,7 +375,9 @@ label Restroom:
                 "발걸음 소리가 가까워진다..."
                 c "아?"
 
-                # 사망
+                $ Checked_RestroomEvent = True
+                jump Restroom
+                # TODO: 사망 처리
 
     else:
         menu:
@@ -375,7 +385,7 @@ label Restroom:
                 "화장실에서 나가시겠습니까?"
                 menu:
                     "화장실에서 나간다.":
-                        jump DiningRoom
+                        jump DiningRoomMenu
 
                     "더 둘러본다.":
                         jump Restroom
@@ -393,47 +403,48 @@ label Restroom:
                 jump Restroom
 
 label Kitchen:
+    scene bg kitchen
     if FirstKitchen:
         $ FirstKitchen = False
         c "으, 추워... 엄청 서늘하다."
         c "무슨 엘사가 다녀갔나…"
         c "여기도 빨리 보고 나가야지."
 
-        jump KitchenMenu
+    jump KitchenMenu
 
 label KitchenMenu:
 
-    $ Floor2Cond4 = True
+    $ Checked_Kitchen = True
 
     menu:
         "문":
             "부엌에서 나갈까?"
             menu:
                 "부엌에서 나간다.":
-                    jump DiningRoom
+                    jump DiningRoomMenu
 
                 "더 둘러본다.":
-                    jump Kitchen
+                    jump KitchenMenu
 
         "수납장":
             "수납장을 열었다."
-            if HaveMP3 == False:
+            if MP3 == False:
                 c "...? 왜 여기에 MP3 플레이어가 있지?"
                 c "일단 챙겨둬야겠다."
 
-                $ HaveMP3 = True
-                jump Kitchen
+                $ MP3 = True
+                jump KitchenMenu
 
             else:
                 c "그래, 상식적으로 텅 빈 수납장을 또 열어봤자 뭐가 생기진 않겠지."
 
-                jump Kitchen
+                jump KitchenMenu
 
         "냉장고":
             "냉장고를 열었다."
             c "뭐라 감상평을 말하기에 민망할 정도로 텅 비어 있네."
 
-            jump Kitchen
+            jump KitchenMenu
 
         "식칼":
             jump Knife
@@ -445,12 +456,13 @@ label Knife:
     if FirstKnife:
         $ FirstKnife = False
         c "악!"
-        "칼에 손이 베여 HP가 20 감소했습니다."
+        $ HP = max(HP - 20, 0)
+        c "칼에 손이 베여 HP가 20 감소했습니다."
 
     else:
         c "두 번은 안 당한다."
 
-        jump KitchenMenu
+    jump KitchenMenu
 
 label Oven:
     if FirstOven:
@@ -461,8 +473,11 @@ label Oven:
 
     else:
         c "썩은 정어리 파이 따위는 다시 보고 싶지 않아."
+    
+    jump KitchenMenu
 
 label Storage:
+    scene bg storage
     if FirstStorage:
         $ FirstStorage = False
         c "이게 대체 다 뭐야?!"
@@ -478,17 +493,15 @@ label Storage:
                 "...깡!"
                 c "윽!"
 
-                # 사망
+                return
+                # TODO: 사망 처리
 
             "돈을 챙기지 않는다.":
                 c "아니지, 이 거지 같은 장소에 있는 돈 따위 가지고 싶지 않아."
 
-    else:
-        jump StorageMenu
+    jump StorageMenu
 
 label StorageMenu:
-
-    $ Floor2Cond5 = True
 
     menu:
         "문":
@@ -515,12 +528,13 @@ label StorageMenu:
 # 퀴즈 ===============================================================================
 
 label QuizRoom:
+    scene bg quiz_room
     if FirstQuizRoom:
         $ FirstQuizRoom = False
         c "이건 뭐 방탈출 게임도 아니고 퀴즈가 왜 이렇게 많아?"
         c "빨리 풀고 넘어가야겠어."
 
-    if ArtCleared and KoreanCleared and ScienceCleared and SocietyCleared and HistoryCleared and EnglishCleared and MathCleared and TechCleared:
+    if Cleared_ArtQuiz and Cleared_KoreanQuiz and Cleared_ScienceQuiz and Cleared_SocietyQuiz and Cleared_HistoryQuiz and Cleared_EnglishQuiz and Cleared_MathQuiz and Cleared_TechQuiz:
         "침실로 가는 문이 열렸다."
         jump Bedroom
 
@@ -533,28 +547,28 @@ label QuizRoom:
                 "나가지 않는다.":
                     jump QuizRoom
 
-        "미술" if not ArtCleared:
+        "미술" if not Cleared_ArtQuiz:
             jump ArtQuiz
 
-        "국어" if not KoreanCleared:
+        "국어" if not Cleared_KoreanQuiz:
             jump KoreanQuiz
 
-        "과학" if not ScienceCleared:
+        "과학" if not Cleared_ScienceQuiz:
             jump ScienceQuiz
 
-        "사회" if not SocietyCleared:
+        "사회" if not Cleared_SocietyQuiz:
             jump SocietyQuiz
 
-        "역사" if not HistoryCleared:
+        "역사" if not Cleared_HistoryQuiz:
             jump HistoryQuiz
 
-        "영어" if not EnglishCleared:
+        "영어" if not Cleared_EnglishQuiz:
             jump EnglishQuiz
 
-        "수학" if not MathCleared:
+        "수학" if not Cleared_MathQuiz:
             jump MathQuiz
 
-        "기술가정" if not TechCleared:
+        "기술가정" if not Cleared_TechQuiz:
             jump TechQuiz
 
 label LifeCheck:
@@ -563,7 +577,8 @@ label LifeCheck:
         "갑작스레 당신의 머리가 깨질듯이 아파옵니다."
         c "안돼...!"
 
-        # 사망
+        return
+        # TODO: 사망 처리
 
     else:
         "남은 기회: [QuizLife]번"
@@ -577,7 +592,7 @@ label ArtQuiz:
         show text "{size=30}{b}정답입니다!{/b}" at truecenter
         pause 1.0
         hide text
-        $ ArtCleared = True
+        $ Cleared_ArtQuiz = True
         jump QuizRoom
     else:
         show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
@@ -587,66 +602,69 @@ label ArtQuiz:
         jump LifeCheck
 
 label KoreanQuiz:
+
+    # 1번 문제 ------------------------------------------------------------------
     show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n1. 나는 [[곰곰히 / 곰곰이] 생각했다." at truecenter
     $ Answer = renpy.input("정답을 입력하세요.").strip()
     hide text
+
     if Answer == "곰곰이":
         show text "{size=30}{b}정답입니다!{/b}" at truecenter
         pause 1.0
         hide text
     else:
-        show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
-        pause 1.0
-        hide text
-        $ QuizLife -= 1
+        jump KoreanWrongAnswer
 
-        if QuizLife <= 0:
-            jump LifeCheck
-        else:
-            "남은 기회: [QuizLife]번"
-
+    # 2번 문제 ------------------------------------------------------------------
     show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n2. [[재작년 / 제작년] 매출보다 높네." at truecenter
     $ Answer = renpy.input("정답을 입력하세요.").strip()
     hide text
+
     if Answer == "재작년":
         show text "{size=30}{b}정답입니다!{/b}" at truecenter
         pause 1.0
         hide text
     else:
-        show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
-        pause 1.0
-        hide text
-        $ QuizLife -= 1
-        if QuizLife <= 0:
-            jump LifeCheck
-        else:
-            "남은 기회: [QuizLife]번"
+        jump KoreanWrongAnswer
 
+    # 3번 문제 ------------------------------------------------------------------
     show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n3. [[맞힐 / 맞출] 수 있으면 해봐." at truecenter
     $ Answer = renpy.input("정답을 입력하세요.").strip()
     hide text
+
     if Answer == "맞힐":
         show text "{size=30}{b}정답입니다!{/b}" at truecenter
         pause 1.0
         hide text
-        $ KoreanCleared = True
+        $ Cleared_KoreanQuiz = True
         jump QuizRoom
     else:
-        show text "{size=30}{b}틀렸습니다.{/b}." at truecenter
-        pause 1.0
-        hide text
-        $ QuizLife -= 1
+        jump KoreanWrongAnswer
+
+label KoreanWrongAnswer:
+
+    $ QuizLife -= 1
+
+    show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
+    pause 1.0
+    hide text
+
+    if QuizLife <= 0:
         jump LifeCheck
 
+    "남은 기회: [QuizLife]번"
+
+    jump KoreanQuiz
+
 label ScienceQuiz:
-    show text "{size=30}{b}[[과학]{/b}\n\n다음 화학 반응에서의 세 규칙 중 부피와 관련된 것은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. 질량 보존 법칙\n2. 일정 성분비 법칙\n3. 기체 반응 법칙"
+    show text "{size=30}{b}[[과학]{/b}\n\n다음 화학 반응에서의 세 규칙 중 부피와 관련된 것은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. 질량 보존 법칙\n2. 일정 성분비 법칙\n3. 기체 반응 법칙" at truecenter
     $ Answer = renpy.input("정답을 입력하세요.").strip()
     hide text
     if Answer == "3":
         show text "{size=30}{b}정답입니다!{/b}" at truecenter
         pause 1.0
         hide text
-        $ ScienceCleared = True
+        $ Cleared_ScienceQuiz = True
         jump QuizRoom
     else:
         show text "{size=30}{b}틀렸습니다.{/b}." at truecenter
@@ -663,7 +681,7 @@ label SocietyQuiz:
         show text "{size=30}{b}정답입니다!{/b}" at truecenter
         pause 1.0
         hide text
-        $ SocietyCleared = True
+        $ Cleared_SocietyQuiz = True
         jump QuizRoom
     else:
         show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
@@ -680,7 +698,7 @@ label HistoryQuiz:
         show text "{size=30}{b}정답입니다!{/b}" at truecenter
         pause 1.0
         hide text
-        $ HistoryCleared = True
+        $ Cleared_HistoryQuiz = True
         jump QuizRoom
     else:
         show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
@@ -690,14 +708,14 @@ label HistoryQuiz:
         jump LifeCheck
 
 label EnglishQuiz:
-    show text "{size=30}{b}[[영어]{/b}\n\n다음 중 어법적으로 옳은 문장은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. Never have I have been to Korea.\n2. What you said yesterday were so terrible that I almost threw up.\n3. Do you know what he told to me?" at truecenter
+    show text "{size=30}{b}[[영어]{/b}\n\n다음 중 어법적으로 옳은 문장은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. Never have I been to Korea.\n2. What you said yesterday were so terrible that I almost threw up.\n3. Do you know what he told to me?" at truecenter
     $ Answer = renpy.input("정답을 입력하세요.").strip()
     hide text
     if Answer == "1":
         show text "{size=30}{b}정답입니다!{/b}" at truecenter
         pause 1.0
         hide text
-        $ EnglishCleared = True
+        $ Cleared_EnglishQuiz = True
         jump QuizRoom
     else:
         show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
@@ -707,14 +725,14 @@ label EnglishQuiz:
         jump LifeCheck
 
 label MathQuiz:
-    show text '{size=30}{b}[[수학]{/b}\n\n마토와 인터가 함께 급식을 먹으러 가고 있었습니다.\n인터가 학생 A와 B의 삼각형 모양 머리를 보고 이렇게 말했습니다.\n"학생 A의 머리의 한 각이 학생 B의 머리의 한 각과 같고, 그 각들의 대변의 길이가 각각 같으므로 학생 A의 머리와 학생 B의 머리는 합동이야."\n\n그러자 마토가 이렇게 말했습니다.\n"네 삼각형 모양 머리를 수직으로 가르는 직선을 그리면 그 직선의 그래프는 a가 0이 아닌 y=ax의 그래프로 나타나는데,\n이때 이 그래프는 a의 값과 관계 없이 반드시 (0, 1)의 점을 지나. 그러니까 네 두개골을 수직으로 가르는 직선을 그어 버리기 전에 조용히 하면 안 될까?"\n\n그때 지나가던 근초고왕이 이렇게 말했습니다.\n"이차방정식을 푸는 방법 중 하나인 인수분해는 각각 수 또는 식인 A와 B의 곱이 0일 때, A와 B 중 하나는 무조건 0이라는 원리를 이용해.\n나와 함께 백제의 전성기를 이끌지 않을래?"\n\n마지막으로 그들을 발견한 유 교수가 말했습니다.\n"어떤 소수를 기약분수로 바꾸어 나타낼 때, 분모의 소인수가 2, 3, 5뿐이면 그것은 유한소수이고 그렇지 않다면 그것은 순환소수야."\n\n\n위 글에서 옳은 말을 한 사람은 누구인지 [[인터, 마토, 근초고왕, 유 교수] 중 맞는 것을 모두 쓰시오.' at truecenter
+    show text '{size=30}{b}[[수학]{/b}\n\n곽철이와 제임스가 함께 급식을 먹으러 가고 있었습니다.\n{b}제임스{/b}가 학생 A와 B의 삼각형 모양 머리를 보고 이렇게 말했습니다.\n"학생 A의 머리의 한 각이 학생 B의 머리의 한 각과 같고, 그 각들의 대변의 길이가 각각 같으므로 학생 A의 머리와 학생 B의 머리는 합동이야."\n\n그러자 {b}곽철이{/b}가 이렇게 말했습니다.\n"네 삼각형 모양 머리를 수직으로 가르는 직선을 그리면 그 직선의 그래프는 a가 0이 아닌 y=ax의 그래프로 나타나는데,\n이때 이 그래프는 a의 값과 관계 없이 반드시 (0, 1)의 점을 지나. 그러니까 네 두개골을 수직으로 가르는 직선을 그어 버리기 전에 조용히 하면 안 될까?"\n\n그때 지나가던 {b}한권택{/b}이 이렇게 말했습니다.\n"이차방정식을 푸는 방법 중 하나인 인수분해는 각각 수 또는 식인 A와 B의 곱이 0일 때, A와 B 중 하나는 무조건 0이라는 원리를 이용해."\n\n마지막으로 그들을 발견한 {b}오르테{/b}가 말했습니다.\n"어떤 소수를 기약분수로 바꾸어 나타낼 때, 분모의 소인수가 2, 3, 5뿐이면 그것은 유한소수이고 그렇지 않다면 그것은 순환소수야."\n\n\n위 글에서 옳은 말을 한 사람은 누구인지 [[{b}제임스, 곽철이, 한권택, 오르테{/b}] 중 맞는 것을 모두 쓰시오.' at truecenter
     $ Answer = renpy.input("정답을 입력하세요.").strip()
     hide text
-    if Answer == "근초고왕":
+    if Answer == "한권택":
         show text "{size=30}{b}정답입니다!{/b}" at truecenter
         pause 1.0
         hide text
-        $ MathCleared = True
+        $ Cleared_MathQuiz = True
         jump QuizRoom
     else:
         show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
@@ -733,11 +751,31 @@ label TechQuiz:
 # ====================================================================================
 
 label Terrace:
+    scene bg terrace
     if FirstTerrace:
         $ FirstTerrace = False
         c "여기에는 지하실도 있고, 테라스도 있고 별의별 게 다 있냐…"
-        c "김춘배: 저건 뭐지?"
-        c "김춘배: 벌집이잖아! 이게 뭔 거지 같은 경우지?"
+        c "저건 뭐지?"
+        c "벌집이잖아! 이게 뭔 거지 같은 경우지?"
+    
+    jump TerraceMenu
+
+label TerraceMenu:
+    menu:
+        "문":
+            "테라스에서 나가시겠습니까?"
+            menu:
+                "테라스에서 나간다.":
+                    jump QuizRoom
+
+                "더 둘러본다.":
+                    jump TerraceMenu
+
+        "벌집":
+            "벌집을 조사했다." # 임시
+            jump TerraceMenu
+    
 
 label Bedroom:
-    "침실."
+    scene bg bedroom
+    "침실." # 임시
