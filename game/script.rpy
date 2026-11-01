@@ -6,6 +6,7 @@ define y = Character('연살')
 # 변수 정의 --------------------------------------------------------------
 
 default HP = 100
+default EndingType = None
 
 # 퀴즈
 default QuizLife = 3
@@ -77,6 +78,47 @@ image bg game_clear = "images/backgrounds/game_clear.png"
 # 스크립트 시작 -----------------------------------------------------------
 label start:
     jump Festival
+
+label GameClear:
+    scene bg game_clear
+    show text "{size=60}{b}탈출에 성공하였습니다!{/b}" at truecenter
+
+    menu:
+        "처음부터 다시":
+            $ renpy.full_restart()
+
+        "게임 종료":
+            return
+
+label GameOver:
+    scene bg game_over
+
+    if EndingType == "NoHP":
+        show text "{size=60}{b}HP가 0이 되어 사망했습니다.{/b}" at truecenter
+
+    elif EndingType == "NoQuizLife":
+        show text "{size=60}{b}세 번의 기회 안에 퀴즈를 모두 풀지 못해 사망했습니다.{/b}" at truecenter
+    
+    elif EndingType == "RestroomAssassin":
+        show text "{size=60}{b}화장실에서 자객에 의해 사망했습니다.{/b}" at truecenter
+
+    elif EndingType == "StorageAssassin":
+        show text "{size=60}{b}창고에서 자객에 의해 사망했습니다.{/b}" at truecenter
+
+    elif EndingType == "DarkroomAssassin":
+        show text "{size=60}{b}암실에서 자객에 의해 사망했습니다.{/b}" at truecenter
+
+    elif EndingType == "Yeonsal":
+        show text "{size=60}{b}연살에게 패배하였습니다.{/b}" at truecenter
+
+    pause 2.0
+    hide text
+    menu:
+        "처음부터 다시":
+            $ renpy.full_restart()
+            
+        "게임 종료":
+            return
 
 label Festival:
     scene bg festival
@@ -167,6 +209,11 @@ label DoorWithoutCellarKey:
         "손으로 부순다.":
             $ HP = max(HP - 30, 0)
             "HP가 30 감소했습니다."
+
+            if  HP <= 0:
+                $ EndingType = "NoHP"
+                jump GameOver
+
             c "윽! 겁나 아프네…"
             c "그래도 문이 박살났으니 이 공간에서 나갈 수 있겠어!"
 
@@ -333,6 +380,11 @@ label FishCake:
                 "케이크에서 동전 한 개가 나왔다."
                 "이빨이 나가 HP가 20 감소했다."
                 $ HP = max(HP - 20, 0)
+
+                if  HP <= 0:
+                    $  EndingType = "NoHP"
+                    jump GameOver
+
                 jump DiningRoomMenu
 
             "먹지 않는다.":
@@ -367,8 +419,8 @@ label Restroom:
                 "발걸음 소리가 가까워진다..."
                 c "아?"
 
-                jump Restroom
-                # TODO: 사망 처리
+                $ EndingType = "RestroomAssassin"
+                jump GameOver
 
             "3번 칸":
                 "당신은 3번 칸으로 잽싸게 들어갔다."
@@ -376,8 +428,8 @@ label Restroom:
                 "발걸음 소리가 가까워진다..."
                 c "아?"
 
-                jump Restroom
-                # TODO: 사망 처리
+                $ EndingType = "RestroomAssassin"
+                jump GameOver
 
     else:
         menu:
@@ -459,6 +511,10 @@ label Knife:
         $ HP = max(HP - 20, 0)
         c "칼에 손이 베여 HP가 20 감소했습니다."
 
+        if  HP <= 0:
+                $ EndingType = "NoHP"
+                jump GameOver
+
     else:
         c "두 번은 안 당한다."
 
@@ -493,9 +549,9 @@ label Storage:
                 "...깡!"
                 c "윽!"
 
-                return
-                # TODO: 사망 처리
-
+                $ EndingType = "StorageAssassin"
+                jump GameOver
+                
             "돈을 챙기지 않는다.":
                 c "아니지, 이 거지 같은 장소에 있는 돈 따위 가지고 싶지 않아."
 
@@ -536,7 +592,19 @@ label QuizRoom:
 
     if Cleared_ArtQuiz and Cleared_KoreanQuiz and Cleared_ScienceQuiz and Cleared_SocietyQuiz and Cleared_HistoryQuiz and Cleared_EnglishQuiz and Cleared_MathQuiz and Cleared_TechQuiz:
         "침실로 가는 문이 열렸다."
-        jump Bedroom
+        jump QuizRoomMenu
+
+label QuizRoomMenu:
+    menu:
+        "침실로 간다.":
+            jump Bedroom
+        
+        "더 둘러본다.":
+            jump QuizRoomMenu
+        
+        "~~을 조사한다.":   # TODO: 조사 오브젝트 추가
+            "조사했다."
+            jump QuizRoomMenu
 
     menu:
         "테라스 문":
@@ -573,12 +641,8 @@ label QuizRoom:
 
 label LifeCheck:
     if QuizLife <= 0:
-        c "이... 이게 무슨 느낌이지?"
-        "갑작스레 당신의 머리가 깨질듯이 아파옵니다."
-        c "안돼...!"
-
-        return
-        # TODO: 사망 처리
+        $ EndingType = "NoQuizLife"
+        jump GameOver
 
     else:
         "남은 기회: [QuizLife]번"
