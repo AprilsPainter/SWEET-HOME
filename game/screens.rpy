@@ -346,15 +346,15 @@ screen main_menu():
     ## 이렇게 하면 다른 메뉴 화면이 모두 교체됩니다.
     tag menu
 
-    add gui.main_menu_background
+    add "main_menu_video"
 
     ## 이 빈 프레임은 기본 메뉴를 어둡게 만듭니다.
-    frame:
-        style "main_menu_frame"
+    # frame:
+    #     style "main_menu_frame"
 
     ## use 명령어로 스크린 내에 다른 스크린을 불러옵니다. 메인 메뉴 스크린의 내
     ## 용물은 navigation 스크린에 있습니다.
-    use navigation
+    use custom_main_menu
 
     if gui.show_name:
 
@@ -1599,3 +1599,64 @@ style slider_vbox:
 style slider_slider:
     variant "small"
     xsize 900
+
+# 커스텀 스크린 ==============================================
+image button_idle = Frame(Solid("#25171eaa"))
+image button_hover = Frame(Solid("#df5aa8aa"))
+
+screen custom_main_menu():
+    text "SWEET HOME":
+        color "#c26b92cc"
+        size 80
+        xpos 195
+        ypos 225
+        xsize 1290
+        ysize 285
+        font "DeoUahanSerif.ttf"
+        text_align 0.00
+    vbox:
+        xpos 205
+        ypos 410
+        xsize 439
+        ysize 513
+        spacing 45
+        textbutton "시작":
+            action Start()
+            xsize 415
+            ysize 90
+            background "#321a25"
+            text_font "DeoUahanSerif.ttf"
+            text_xalign 0.50
+            idle_background "button_idle"
+            hover_background "button_hover"            text_color "#ffffff"
+            text_hover_color "#ffd6ee"
+        textbutton "불러오기":
+            action ShowMenu("load")
+            xsize 415
+            ysize 90
+            background "#321a25"
+            text_font "DeoUahanSerif.ttf"
+            text_xalign 0.50
+            idle_background "button_idle"
+            hover_background "button_hover"            text_color "#ffffff"
+            text_hover_color "#ffffff"
+        textbutton "설정":
+            action ShowMenu("preferences")
+            xsize 415
+            ysize 90
+            background "#321a25"
+            text_font "DeoUahanSerif.ttf"
+            text_xalign 0.50
+            idle_background "button_idle"
+            hover_background "button_hover"            text_color "#ffffff"
+            text_hover_color "#ffffff"
+        textbutton "나가기":
+            action Quit(confirm=True)
+            xsize 415
+            ysize 90
+            background "#321a25"
+            text_font "DeoUahanSerif.ttf"
+            text_xalign 0.50
+            idle_background "button_idle"
+            hover_background "button_hover"            text_color "#ffffff"
+            text_hover_color "#ffffff"

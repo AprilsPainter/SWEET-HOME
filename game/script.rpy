@@ -48,29 +48,52 @@ default Checked_Kitchen = False
 default Ate_StrawberryCake = False
 default Ate_FishCake = False
 
-# 이미지 정의 ------------------------------------------------------------
+# 캐릭터 이미지 정의 ------------------------------------------------------------
+# 춘배 ------------------------------------------------------------
+image chunbae normal = Transform("images/characters/chunbae_normal.png", zoom=0.475)
+image chunbae panic = Transform("images/characters/chunbae_panic.png", zoom=0.475)
+image chunbae surprised = Transform("images/characters/chunbae_surprised.png", zoom=0.475)
+image chunbae angry = Transform("images/characters/chunbae_angry.png", zoom=0.475)
+image chunbae shy = Transform("images/characters/chunbae_shy.png", zoom=0.475)
+image chunbae scared = Transform("images/characters/chunbae_scared.png", zoom=0.475)
 
+
+# 지아 ------------------------------------------------------------
+image jia normal = Transform("images/characters/jia_normal.png", zoom=0.475)
+image jia mystery = Transform("images/characters/jia_mystery.png", zoom=0.475)
+image jia smile = Transform("images/characters/jia_smile.png", zoom=0.475)
+
+
+# 연살 ------------------------------------------------------------
+image yeonsal angry = Transform("images/characters/yeonsal_angry.png", zoom=0.475)
+image yeonsal normal = Transform("images/characters/yeonsal_normal.png", zoom=0.475)
+image yeonsal smile = Transform("images/characters/yeonsal_smile.png", zoom=0.475)
 
 # 아이템/오브젝트 이미지 정의 -----------------------------------------------
 
 
 # 배경 이미지 정의
-image bg alley = "images/backgrounds/alley.png"
-image bg bedroom = "images/backgrounds/bedroom.png"
-image bg cellar = "images/backgrounds/cellar.png"
-image bg corridor = "images/backgrounds/corridor.png"
-image bg darkroom = "images/backgrounds/darkroom.png"
-image bg dining_room = "images/backgrounds/dining_room.png"
-image bg exit = "images/backgrounds/exit.png"
-image bg festival = "images/backgrounds/festival.png"
-image bg kitchen = "images/backgrounds/kitchen.png"
-image bg quiz_room = "images/backgrounds/quiz_room.png"
-image bg restroom = "images/backgrounds/restroom.png"
-image bg rooftop = "images/backgrounds/rooftop.png"
-image bg storage = "images/backgrounds/storage.png"
-image bg terrace = "images/backgrounds/terrace.png"
-image bg game_over = "images/backgrounds/game_over.png"
-image bg game_clear = "images/backgrounds/game_clear.png"
+image main_menu_video = Movie(
+    play="images/backgrounds/main_menu.ogv",
+    size=(1920, 1080),
+    loop=True
+)
+image bg alley = Transform("images/backgrounds/alley.png", xysize=(1920, 1080))
+image bg bedroom = Transform("images/backgrounds/bedroom.png", xysize=(1920, 1080))
+image bg cellar = Transform("images/backgrounds/cellar.png", xysize=(1920, 1080))
+image bg corridor = Transform("images/backgrounds/corridor.png", xysize=(1920, 1080))
+image bg darkroom = Transform("images/backgrounds/darkroom.png", xysize=(1920, 1080))
+image bg dining_room = Transform("images/backgrounds/dining_room.png", xysize=(1920, 1080))
+image bg exit = Transform("images/backgrounds/exit.png", xysize=(1920, 1080))
+image bg festival = Transform("images/backgrounds/festival.png", xysize=(1920, 1080))
+image bg kitchen = Transform("images/backgrounds/kitchen.png", xysize=(1920, 1080))
+image bg quiz_room = Transform("images/backgrounds/quiz_room.png", xysize=(1920, 1080))
+image bg restroom = Transform("images/backgrounds/restroom.png", xysize=(1920, 1080))
+image bg rooftop = Transform("images/backgrounds/rooftop.png", xysize=(1920, 1080))
+image bg storage = Transform("images/backgrounds/storage.png", xysize=(1920, 1080))
+image bg terrace = Transform("images/backgrounds/terrace.png", xysize=(1920, 1080))
+image bg game_over = Transform("images/backgrounds/game_over.png", xysize=(1920, 1080))
+image bg game_clear = Transform("images/backgrounds/game_clear.png", xysize=(1920, 1080))
 
 # 스크린 정의 ------------------------------------------------------------
 
@@ -127,13 +150,20 @@ label Festival:
     c "(내는 김춘배, 평범한 회사원이다.)"
     c "(오늘 회사 동료인 지아 씨와 벚꽃 축제에 다녀왔다.)"
     j "춘배 씨!"
+    show jia normal with dissolve
     c "예?"
     j "이렇게 헤어지기 아쉬운데, 저희 집에서 영화라도 보고 갈래요?"
     c "그거 좋구나."
-    j "아하핫! 역시 춘배 씨는 재밌는 분이시네요!"
+    show jia mystery
+    pause 0.4
+    show jia smile
+    j "아하핫! 역시 춘배 씨는 재밌는 분이시네요!" with hpunch
     c "(지아 씨와 단둘이 영화라니… 정말 기대돼.)"
+    show jia normal
     j "저는 할 게 있어서 먼저 가 있을게요."
+    show jia smile
     j "주소 보낼 테니 이따 만나요!"
+    hide jia with dissolve
 
     jump Alley
 
@@ -143,7 +173,7 @@ label Alley:
     c "(근데 집 가는 길이 왜 이렇게 외진 곳이지?)"
     c "(이러다 괴한한테 머리 한 대 맞고 납치당하는 거 아냐?)"
     c "(나도 참 별 생각을 다 하네…)"
-    "깡!"
+    "깡!" with vpunch
     c "윽…!"
 
     jump Cellar
@@ -152,15 +182,22 @@ label Cellar:
     scene bg cellar with Fade(1, 1.5, 1)
     if FirstCellar:
         $ FirstCellar = False
+        show chunbae panic with dissolve
         c "으윽, 머리야… 피 나는 건 아니겠지?"
+        show chunbae normal
         c "그런데 여기가 어디지?"
-        c "설마 나… 납치 당한 거야?!"
+        show chunbae scared
+        c "설마 나… 납치 당한 거야?!" with hpunch
+        show chunbae angry
         c "감히 나를 능멸하다니…!"
+        show chunbae normal
         c "하아... 일단 이 곳에서 나갈 방법을 찾아 보자."
+        hide chunbae with dissolve
 
     jump CellarMenu
 
 label CellarMenu:
+    scene bg cellar
     menu:
         "상자":
             jump Chest
@@ -179,25 +216,37 @@ label CellarMenu:
                 jump DoorWithoutCellarKey
 
 label Chest:
+    show chunbae panic with dissolve
     c "으, 이게 뭐야... 물컹거리는데…?"
+    show chunbae normal
     c "?"
-    c "으악!!! 쥐잖아!!!!!!!!!!!!"
+    show chunbae surprised
+    c "으악!!! 쥐잖아!!!!!!!!!!!!" with hpunch
+    hide chunbae with dissolve
 
     jump Cellar
 
 label Hole:
+    show chunbae normal with dissolve
     c "뭔가 단단한게 집히는데.."
     c "이게 뭐지?"
-    c "으악!!! 해골?!"
+    show chunbae surprised
+    c "으악!!! 해골?!" with hpunch
+    show chunbae panic
     c "설마... 여기서 죽은 사람?!?!?!?!"
+    hide chunbae with dissolve
 
     jump Cellar
 
 label Suitcase:
+    show chunbae panic with dissolve
     c "이상한 거 나오진 않겠지…?"
+    show chunbae normal
     c "어?"
-    c "열쇠다!"
+    show chunbae shy
+    c "열쇠다!" with hpunch
     c "이거라면 문을 열 수 있지 않을까?"
+    hide chunbae with dissolve
     "{b}{color=ffd400}지하실 열쇠{/color}{/b}를 획득했습니다."
 
     $ CellarKey = True
@@ -206,7 +255,9 @@ label Suitcase:
 
 label DoorWithoutCellarKey:
     "이 문을 열려면 열쇠가 필요합니다."
+    show chunbae normal with dissolve
     c "그냥 풀파워로 치면 열릴 것 같긴 한데… 어쩌지?"
+    hide chunbae with dissolve
 
     menu:
         "손으로 부순다.":
@@ -217,20 +268,28 @@ label DoorWithoutCellarKey:
                 $ EndingType = "NoHP"
                 jump GameOver
 
+            show chunbae panic with dissolve
             c "윽! 겁나 아프네…"
+            show chunbae normal
             c "그래도 문이 박살났으니 이 공간에서 나갈 수 있겠어!"
+            hide chunbae with dissolve
 
             jump Corridor
 
         "더 둘러본다.":
+            show chunbae normal
             c "손으로 문을 부수는 건 미친 짓이지."
+            hide chunbae with dissolve
 
             jump Cellar
 
 label DoorWithCellarKey:
+    show chunbae normal with dissolve
     c "제발 이 열쇠가 맞기를…"
+    show chunbae shy
     c "열렸다!"
     c "드디어 이 지긋지긋한 공간에서 나갈 수 있어!"
+    hide chunbae with dissolve
 
     jump Corridor
 
@@ -238,13 +297,18 @@ label Corridor:
     scene bg corridor with Fade(0.5, 1.0, 1.0)
     if FirstCorridor:
         $ FirstCorridor = False
+        show chunbae normal with dissolve
         c "드디어 나왔다! 그런데 밖이 아니네?"
+        show chunbae angry
         c "여기서 나가자마자 범인에게 곤장 100대를 치겠어…"
+        show chunbae normal
         c "이제 어디로 가야하지?"
+        hide chunbae with dissolve
 
     jump CorridorMenu
 
 label CorridorMenu:
+    scene bg corridor
     menu:
         "탈출구":
             if MasterKey:
@@ -296,13 +360,17 @@ label DiningRoom:
     scene bg dining_room with fade
     if FirstDiningRoom:
         $ FirstDiningRoom = False
+        show chunbae normal with dissolve
         c "여기가 식당인가? 엄청 크네."
+        show chunbae shy
         c "잠깐만, 그럼 먹을 것도 많으려나?!"
         c "조금만 구경해 봐야지!"
+        hide chunbae with dissolve
 
     jump DiningRoomMenu
 
 label DiningRoomMenu:
+    scene bg dining_room
     menu:
         "문":
             "식당에서 나갈까?"
@@ -339,7 +407,9 @@ label DiningRoomMenu:
 
 label StrawberryCake:
     if Ate_StrawberryCake:
+        show chunbae normal with dissolve
         c "참 맛있었지... 좀 찝찝하긴 하지만."
+        hide chunbae with dissolve
         jump DiningRoomMenu
 
     else:
@@ -350,21 +420,28 @@ label StrawberryCake:
             "먹는다.":
                 $ Ate_StrawberryCake = True
                 $ Checked_StrawberryCake = True
+                show chunbae normal with dissolve
                 c "…"
+                show chunbae shy
                 c "오! 맛있다."
+                hide chunbae with dissolve
                 $ HP = min(HP + 10, 100)
                 "{color=66ff66}딸기 케이크의 힘으로 HP가 10 증가했습니다.{/color}"
                 jump DiningRoomMenu
 
             "먹지 않는다.":
-                c "(아무래도 이런 곳에 있는 음식을 먹는 건 좀 그래.)"
+                show chunbae normal with dissolve
+                c "아무래도 이런 곳에 있는 음식을 먹는 건 좀 그래."
+                hide chunbae with dissolve
                 $ Checked_StrawberryCake = True
                 jump DiningRoomMenu
 
 label FishCake:
     if Ate_FishCake:
+        show chunbae angry with dissolve
         c "......"
         c "아무거나 주워 먹으면 안된다는 교훈을 얻었지."
+        hide chunbae with dissolve
         jump DiningRoomMenu
 
     else:
@@ -377,11 +454,15 @@ label FishCake:
                 $ Ate_FishCake = True
                 $ Checked_FishCake = True
                 $ GoldenCoin = True
+                show chunbae normal with dissolve
                 c "…"
                 "까득!"
-                c "아악!!"
+                show chunbae surprised
+                c "아악!!" with hpunch
                 "케이크에서 {color=ffd400}황금 동전{/color}이 나왔다."
+                show chunbae scared
                 "{color=66ff66}이빨이 나가 HP가 20 감소했다.{/color}"
+                hide chunbae with dissolve
                 $ HP = max(HP - 20, 0)
 
                 if  HP <= 0:
@@ -392,18 +473,23 @@ label FishCake:
 
             "먹지 않는다.":
                 $ Checked_FishCake = True
+                show chunbae panic with dissolve
                 c "내가 잠깐 미쳤었나 보네, 이걸 먹을 생각을 하다니."
+                hide chunbae with dissolve
                 jump DiningRoomMenu
 
 label Restroom:
     scene bg restroom with fade
     if FirstRestroom:
         $ FirstRestroom = False
+        show chunbae normal with dissolve
         c "오, 안은 생각보다 깔끔하네."
         c "근데 여긴 왜 뭐가 나올 것 같이 생겼냐…?"
         c "아무 일도 안 일어나겠지?"
         "문 밖에서 누군가의 발걸음 소리가 들린다."
-        c "아니 이런 망할, 호랑이도 제 말하면 온다더니…!!"
+        show chunbae panic
+        c "아니 이런 망할, 호랑이도 제 말하면 온다더니…!!" with hpunch
+        hide chunbae with dissolve
         "어느 칸에 숨을까?"
 
         menu:
@@ -461,13 +547,16 @@ label Kitchen:
     scene bg kitchen with fade
     if FirstKitchen:
         $ FirstKitchen = False
+        show chunbae normal with dissolve
         c "으, 추워... 엄청 서늘하다."
         c "무슨 엘사가 다녀갔나…"
         c "여기도 빨리 보고 나가야지."
+        hide chunbae with dissolve
 
     jump KitchenMenu
 
 label KitchenMenu:
+    scene bg kitchen
 
     $ Checked_Kitchen = True
 
@@ -527,8 +616,10 @@ label Oven:
     if FirstOven:
         $ FirstOven = False
         "오븐을 열었다."
-        c "으악 이게 뭐야!!"
-        c "아니 이 집 주방장은 생선 못 먹어 죽은 귀신이 들렸나 왜 자꾸 생선으로 거지같은 요리를 하는 거야!!"
+        show chunbae surprised with dissolve
+        c "으악 이게 뭐야!!" with hpunch
+        c "아니 이 집 주방장은 생선 못 먹어 죽은 귀신이 들렸나 왜 자꾸 생선으로 거지같은 요리를 하는 거야!!" with hpunch
+        hide chunbae with dissolve
 
     else:
         c "썩은 정어리 파이 따위는 다시 보고 싶지 않아."
@@ -539,11 +630,15 @@ label Storage:
     scene bg storage with fade
     if FirstStorage:
         $ FirstStorage = False
+        show chunbae panic at left with dissolve
         c "이게 대체 다 뭐야?!"
         c "어떻게 이 정도 양의 돈이 이곳에 존재하는 거지?"
+        show chunbae normal
         c "내가 평생 벌어도 못 벌 돈이야..."
         c "..."
+        show chunbae shy
         c "조금만... 슬쩍 해볼까?"
+        hide chunbae with dissolve
 
         menu:
             "돈을 챙긴다.":
@@ -561,6 +656,7 @@ label Storage:
     jump StorageMenu
 
 label StorageMenu:
+    scene bg storage
 
     menu:
         "문":
@@ -590,8 +686,10 @@ label QuizRoom:
     scene bg quiz_room with Fade(0.5, 1.0, 1.0)
     if FirstQuizRoom:
         $ FirstQuizRoom = False
+        show chunbae normal with dissolve
         c "이게 전부 풀어야 하는 문제들인가...?"
-        c "빨리 풀고 넘어가야겠어."
+        c "빨리 풀고 넘어가야겠어. 왠지 문제를 다 풀면 이 여정이 끝날 것 같은 느낌이 드는 걸?"
+        hide chunbae with dissolve
     
     if Cleared_ArtQuiz and Cleared_KoreanQuiz and Cleared_ScienceQuiz and Cleared_SocietyQuiz and Cleared_HistoryQuiz and Cleared_EnglishQuiz and Cleared_MathQuiz and Cleared_TechQuiz:
         "침실로 가는 문이 열렸다."
@@ -631,6 +729,7 @@ label QuizRoom:
             jump TechQuiz
 
 label QuizRoomMenu:
+    scene bg quiz_room
     menu:
         "침실 문":
             "침실로 갈까?"
@@ -916,13 +1015,17 @@ label Terrace:
     scene bg terrace with fade
     if FirstTerrace:
         $ FirstTerrace = False
+        show chunbae normal with dissolve
         c "여기에는 지하실도 있고, 테라스도 있고 별의별 게 다 있냐…"
         c "저건 뭐지?"
-        c "벌집이잖아! 이게 뭔 거지 같은 경우지?"
+        show chunbae with panic
+        c "벌집이잖아! 이게 뭔 당혹스러운 경우지?"
+        hide chunbae with dissolve
     
     jump TerraceMenu
 
 label TerraceMenu:
+    scene bg terrace
     menu:
         "문":
             "테라스에서 나가시겠습니까?"
@@ -959,6 +1062,5 @@ label TerraceMenu:
     
 
 label Bedroom:
-    scene bg bedroom with fade
-    "침실." # 임시
+    scene bg bedroom with fade # 임시
     jump GameClear
