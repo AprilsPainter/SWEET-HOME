@@ -198,19 +198,20 @@ label Suitcase:
     c "어?"
     c "열쇠다!"
     c "이거라면 문을 열 수 있지 않을까?"
+    "{b}{color=ffd400}지하실 열쇠{/color}{/b}를 획득했습니다."
 
     $ CellarKey = True
 
     jump Cellar
 
 label DoorWithoutCellarKey:
-    "열쇠가 필요하다."
+    "이 문을 열려면 열쇠가 필요합니다."
     c "그냥 풀파워로 치면 열릴 것 같긴 한데… 어쩌지?"
 
     menu:
         "손으로 부순다.":
             $ HP = max(HP - 30, 0)
-            "HP가 30 감소했습니다."
+            "{color=66ff66}HP가 30 감소했습니다.{/color}"
 
             if  HP <= 0:
                 $ EndingType = "NoHP"
@@ -250,7 +251,7 @@ label CorridorMenu:
                 jump Exit
 
             else:
-                "탈출구 문을 열려면 열쇠가 필요하다."
+                "탈출구 문을 열려면 열쇠가 필요합니다."
 
                 jump Corridor
 
@@ -266,7 +267,7 @@ label CorridorMenu:
 
         "창고":
             if GoldenCoin:
-                "동전을 사용해서 잠금을 풀 수 있다."
+                "{b}{color=ffd400}황금 동전{/color}{/b}을 사용해서 잠금을 풀 수 있다."
                 "문을 열어볼까?"
                 menu:
                     "문을 연다.":
@@ -483,7 +484,7 @@ label KitchenMenu:
         "수납장":
             "수납장을 열었다."
             if MP3 == False:
-                c "...? 왜 여기에 MP3 플레이어가 있지?"
+                c "...? 왜 여기에 {b}{color=ffd400}MP3 플레이어{/color}{/b}가 있지?"
                 c "일단 챙겨둬야겠다."
 
                 $ MP3 = True
@@ -589,7 +590,7 @@ label QuizRoom:
     scene bg quiz_room
     if FirstQuizRoom:
         $ FirstQuizRoom = False
-        c "이건 뭐 방탈출 게임도 아니고 퀴즈가 왜 이렇게 많아?"
+        c "이게 전부 풀어야 하는 문제들인가...?"
         c "빨리 풀고 넘어가야겠어."
     
     if Cleared_ArtQuiz and Cleared_KoreanQuiz and Cleared_ScienceQuiz and Cleared_SocietyQuiz and Cleared_HistoryQuiz and Cleared_EnglishQuiz and Cleared_MathQuiz and Cleared_TechQuiz:
@@ -855,7 +856,7 @@ label EnglishQuiz:
 
 label MathQuiz:
     if not Cleared_MathQuiz:
-        show text '{size=30}{b}[[수학]{/b}\n\n곽철이와 제임스가 함께 급식을 먹으러 가고 있었습니다.\n{b}제임스{/b}가 학생 A와 B의 삼각형 모양 머리를 보고 이렇게 말했습니다.\n"학생 A의 머리의 한 각이 학생 B의 머리의 한 각과 같고, 그 각들의 대변의 길이가 각각 같으므로 학생 A의 머리와 학생 B의 머리는 합동이야."\n\n그러자 {b}곽철이{/b}가 이렇게 말했습니다.\n"네 삼각형 모양 머리를 수직으로 가르는 직선을 그리면 그 직선의 그래프는 a가 0이 아닌 y=ax의 그래프로 나타나는데,\n이때 이 그래프는 a의 값과 관계 없이 반드시 (0, 1)의 점을 지나. 그러니까 네 두개골을 수직으로 가르는 직선을 그어 버리기 전에 조용히 하면 안 될까?"\n\n그때 지나가던 {b}한권택{/b}이 이렇게 말했습니다.\n"이차방정식을 푸는 방법 중 하나인 인수분해는 각각 수 또는 식인 A와 B의 곱이 0일 때, A와 B 중 하나는 무조건 0이라는 원리를 이용해."\n\n마지막으로 그들을 발견한 {b}오르테{/b}가 말했습니다.\n"어떤 소수를 기약분수로 바꾸어 나타낼 때, 분모의 소인수가 2, 3, 5뿐이면 그것은 유한소수이고 그렇지 않다면 그것은 순환소수야."\n\n\n위 글에서 옳은 말을 한 사람은 누구인지 [[{b}제임스, 곽철이, 한권택, 오르테{/b}] 중 맞는 것을 모두 쓰시오.' at truecenter
+        show text '{size=30}{b}[[수학]{/b}\n\n곽철이와 제임스가 함께 급식을 먹으러 가고 있었습니다.\n{b}{color=ffd400}제임스{/color}{/b}가 학생 A와 B의 삼각형 모양 머리를 보고 이렇게 말했습니다.\n"학생 A의 머리의 한 각이 학생 B의 머리의 한 각과 같고, 그 각들의 대변의 길이가 각각 같으므로 학생 A의 머리와 학생 B의 머리는 합동이야."\n\n그러자 {b}{color=ffd400}곽철이{/color}{/b}가 이렇게 말했습니다.\n"네 삼각형 모양 머리를 수직으로 가르는 직선을 그리면 그 직선의 그래프는 a가 0이 아닌 y=ax의 그래프로 나타나는데,\n이때 이 그래프는 a의 값과 관계 없이 반드시 (0, 1)의 점을 지나. 그러니까 네 두개골을 수직으로 가르는 직선을 그어 버리기 전에 조용히 하면 안 될까?"\n\n그때 지나가던 {b}{color=ffd400}{한권택}{/color}{/b}이 이렇게 말했습니다.\n"이차방정식을 푸는 방법 중 하나인 인수분해는 각각 수 또는 식인 A와 B의 곱이 0일 때, A와 B 중 하나는 무조건 0이라는 원리를 이용해."\n\n마지막으로 그들을 발견한 {b}{color=ffd400}오르테}{/color}{/b}가 말했습니다.\n"어떤 소수를 기약분수로 바꾸어 나타낼 때, 분모의 소인수가 2, 3, 5뿐이면 그것은 유한소수이고 그렇지 않다면 그것은 순환소수야."\n\n\n위 글에서 옳은 말을 한 사람은 누구인지 [[{b}{color=ffd400}제임스, 곽철이, 한권택, 오르테{/color}{/b}] 중 맞는 것을 모두 쓰시오.' at truecenter
         $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
         if Answer == "한권택":
@@ -884,17 +885,17 @@ label TechQuiz:
             "뒤로 가기":
                 jump QuizRoom
 
-            "유리병 가져가기":
+            "{color=ffd400}유리병{/color} 가져가기":
                 if GlassBottle or Honey_GlassBottle:
-                    "유리병을 이미 보유하고 있습니다."
+                    "{color=ffd400}유리병{/color}을 이미 보유하고 있습니다."
                     jump QuizRoom
             
                 else:
-                    "유리병을 얻었습니다."
+                    "{color=ffd400}유리병{/color}을 얻었습니다."
                     $ GlassBottle = True
                     jump QuizRoom
             
-            "꿀이 든 병 제출하기":
+            "{color=ffd400}꿀이 든 병{/color} 제출하기":
                 if Honey_GlassBottle:
                     "기술 가정 퀴즈를 통과했습니다."
                     $ Cleared_TechQuiz = True
@@ -902,7 +903,7 @@ label TechQuiz:
                     jump QuizRoom
             
                 else:
-                    "꿀이 든 병을 보유하고 있지 않습니다."
+                    "{color=ffd400}꿀이 든 병{/color}을 보유하고 있지 않습니다."
                     jump QuizRoom
         
     else:
@@ -938,7 +939,7 @@ label TerraceMenu:
                     "벌꿀을 채취한다.":
                         $ Honey_GlassBottle = True
                         $ GlassBottle = False
-                        "꿀이 든 병을 얻었습니다."
+                        "{color=ffd400}꿀이 든 병{/color}을 얻었습니다."
                         jump  TerraceMenu
 
                     "채취하지 않는다.":
@@ -949,7 +950,7 @@ label TerraceMenu:
                 jump TerraceMenu
             
             else:
-                "벌꿀을 채취하려면 유리병이 필요합니다."
+                "벌꿀을 채취하려면 {color=ffd400}유리병{/color}이 필요합니다."
                 jump TerraceMenu
 
         "오브젝트":
