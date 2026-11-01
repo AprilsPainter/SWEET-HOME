@@ -31,8 +31,6 @@ default MP3 = False
 default FirstCellar = True
 default FirstCorridor = True
 default FirstDiningRoom = True
-default FirstStrawberryCake = True
-default FirstFishCake = True
 default FirstRestroom = True
 default FirstKitchen = True
 default FirstKnife = True
@@ -165,6 +163,8 @@ label DoorWithoutCellarKey:
 
     menu:
         "손으로 부순다.":
+            $ HP = max(HP - 30, 0)
+            "HP가 30 감소했습니다."
             c "윽! 겁나 아프네…"
             c "그래도 문이 박살났으니 이 공간에서 나갈 수 있겠어!"
 
@@ -365,7 +365,6 @@ label Restroom:
                 "발걸음 소리가 가까워진다..."
                 c "아?"
 
-                $ Checked_RestroomEvent = True
                 jump Restroom
                 # TODO: 사망 처리
 
@@ -375,7 +374,6 @@ label Restroom:
                 "발걸음 소리가 가까워진다..."
                 c "아?"
 
-                $ Checked_RestroomEvent = True
                 jump Restroom
                 # TODO: 사망 처리
 
