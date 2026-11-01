@@ -80,20 +80,20 @@ label start:
     jump Festival
 
 label GameClear:
-    scene bg game_clear
+    scene bg game_clear with Fade(0.5, 1.0, 1.0)
     show text "{size=60}{b}탈출에 성공하였습니다!{/b}" at truecenter
     pause 2.0
     hide text
 
     menu:
-        "처음부터 다시":
+        "메인 화면으로":
             $ renpy.full_restart()
 
         "게임 종료":
             return
 
 label GameOver:
-    scene bg game_over
+    scene bg game_over with Fade(1, 1.0, 1.0)
 
     if EndingType == "NoHP":
         show text "{size=60}{b}HP가 0이 되어 사망했습니다.{/b}" at truecenter
@@ -116,14 +116,14 @@ label GameOver:
     pause 2.0
     hide text
     menu:
-        "처음부터 다시":
+        "메인 화면으로":
             $ renpy.full_restart()
             
         "게임 종료":
             return
 
 label Festival:
-    scene bg festival
+    scene bg festival with Fade(0.5, 1.0, 1.0)
     c "(내는 김춘배, 평범한 회사원이다.)"
     c "(오늘 회사 동료인 지아 씨와 벚꽃 축제에 다녀왔다.)"
     j "춘배 씨!"
@@ -138,7 +138,7 @@ label Festival:
     jump Alley
 
 label Alley:
-    scene bg alley
+    scene bg alley with Fade(0.5, 1.0, 1.0)
     c "(내가 지아 씨 집에 가는 날이 오게 될 줄이야.)"
     c "(근데 집 가는 길이 왜 이렇게 외진 곳이지?)"
     c "(이러다 괴한한테 머리 한 대 맞고 납치당하는 거 아냐?)"
@@ -149,7 +149,7 @@ label Alley:
     jump Cellar
 
 label Cellar:
-    scene bg cellar
+    scene bg cellar with Fade(1, 1.5, 1)
     if FirstCellar:
         $ FirstCellar = False
         c "으윽, 머리야… 피 나는 건 아니겠지?"
@@ -235,7 +235,7 @@ label DoorWithCellarKey:
     jump Corridor
 
 label Corridor:
-    scene bg corridor
+    scene bg corridor with Fade(0.5, 1.0, 1.0)
     if FirstCorridor:
         $ FirstCorridor = False
         c "드디어 나왔다! 그런데 밖이 아니네?"
@@ -293,7 +293,7 @@ label CorridorMenu:
                     jump Corridor
 
 label DiningRoom:
-    scene bg dining_room
+    scene bg dining_room with fade
     if FirstDiningRoom:
         $ FirstDiningRoom = False
         c "여기가 식당인가? 엄청 크네."
@@ -353,7 +353,7 @@ label StrawberryCake:
                 c "…"
                 c "오! 맛있다."
                 $ HP = min(HP + 10, 100)
-                "딸기 케이크의 힘으로 HP가 10 증가했습니다."
+                "{color=66ff66}딸기 케이크의 힘으로 HP가 10 증가했습니다.{/color}"
                 jump DiningRoomMenu
 
             "먹지 않는다.":
@@ -380,8 +380,8 @@ label FishCake:
                 c "…"
                 "까득!"
                 c "아악!!"
-                "케이크에서 동전 한 개가 나왔다."
-                "이빨이 나가 HP가 20 감소했다."
+                "케이크에서 {color=ffd400}황금 동전{/color}이 나왔다."
+                "{color=66ff66}이빨이 나가 HP가 20 감소했다.{/color}"
                 $ HP = max(HP - 20, 0)
 
                 if  HP <= 0:
@@ -396,7 +396,7 @@ label FishCake:
                 jump DiningRoomMenu
 
 label Restroom:
-    scene bg restroom
+    scene bg restroom with fade
     if FirstRestroom:
         $ FirstRestroom = False
         c "오, 안은 생각보다 깔끔하네."
@@ -458,7 +458,7 @@ label Restroom:
                 jump Restroom
 
 label Kitchen:
-    scene bg kitchen
+    scene bg kitchen with fade
     if FirstKitchen:
         $ FirstKitchen = False
         c "으, 추워... 엄청 서늘하다."
@@ -512,7 +512,7 @@ label Knife:
         $ FirstKnife = False
         c "악!"
         $ HP = max(HP - 20, 0)
-        c "칼에 손이 베여 HP가 20 감소했습니다."
+        "{color=66ff66}칼에 손이 베여 HP가 20 감소했습니다.{/color}"
 
         if  HP <= 0:
                 $ EndingType = "NoHP"
@@ -536,7 +536,7 @@ label Oven:
     jump KitchenMenu
 
 label Storage:
-    scene bg storage
+    scene bg storage with fade
     if FirstStorage:
         $ FirstStorage = False
         c "이게 대체 다 뭐야?!"
@@ -587,7 +587,7 @@ label StorageMenu:
 # 퀴즈 ===============================================================================
 
 label QuizRoom:
-    scene bg quiz_room
+    scene bg quiz_room with Fade(0.5, 1.0, 1.0)
     if FirstQuizRoom:
         $ FirstQuizRoom = False
         c "이게 전부 풀어야 하는 문제들인가...?"
@@ -734,7 +734,7 @@ label KoreanQuiz:
             jump KoreanWrongAnswer
 
         # 3번 문제 ------------------------------------------------------------------
-        show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n3. [[맞힐 / 맞출] 수 있으면 해봐." at truecenter
+        show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n3. 이 문제를 [[맞힐 / 맞출] 수 있으면 풀어봐." at truecenter
         $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
 
@@ -856,7 +856,7 @@ label EnglishQuiz:
 
 label MathQuiz:
     if not Cleared_MathQuiz:
-        show text '{size=30}{b}[[수학]{/b}\n\n곽철이와 제임스가 함께 급식을 먹으러 가고 있었습니다.\n{b}{color=ffd400}제임스{/color}{/b}가 학생 A와 B의 삼각형 모양 머리를 보고 이렇게 말했습니다.\n"학생 A의 머리의 한 각이 학생 B의 머리의 한 각과 같고, 그 각들의 대변의 길이가 각각 같으므로 학생 A의 머리와 학생 B의 머리는 합동이야."\n\n그러자 {b}{color=ffd400}곽철이{/color}{/b}가 이렇게 말했습니다.\n"네 삼각형 모양 머리를 수직으로 가르는 직선을 그리면 그 직선의 그래프는 a가 0이 아닌 y=ax의 그래프로 나타나는데,\n이때 이 그래프는 a의 값과 관계 없이 반드시 (0, 1)의 점을 지나. 그러니까 네 두개골을 수직으로 가르는 직선을 그어 버리기 전에 조용히 하면 안 될까?"\n\n그때 지나가던 {b}{color=ffd400}{한권택}{/color}{/b}이 이렇게 말했습니다.\n"이차방정식을 푸는 방법 중 하나인 인수분해는 각각 수 또는 식인 A와 B의 곱이 0일 때, A와 B 중 하나는 무조건 0이라는 원리를 이용해."\n\n마지막으로 그들을 발견한 {b}{color=ffd400}오르테}{/color}{/b}가 말했습니다.\n"어떤 소수를 기약분수로 바꾸어 나타낼 때, 분모의 소인수가 2, 3, 5뿐이면 그것은 유한소수이고 그렇지 않다면 그것은 순환소수야."\n\n\n위 글에서 옳은 말을 한 사람은 누구인지 [[{b}{color=ffd400}제임스, 곽철이, 한권택, 오르테{/color}{/b}] 중 맞는 것을 모두 쓰시오.' at truecenter
+        show text '{size=30}{b}[[수학]{/b}\n\n곽철이와 제임스가 함께 급식을 먹으러 가고 있었습니다.\n{color=ffd400}제임스{/color}가 학생 A와 B의 삼각형 모양 머리를 보고 이렇게 말했습니다.\n"학생 A의 머리의 한 각이 학생 B의 머리의 한 각과 같고, 그 각들의 대변의 길이가 각각 같으므로 학생 A의 머리와 학생 B의 머리는 합동이야."\n\n그러자 {color=ffd400}곽철이{/color}가 이렇게 말했습니다.\n"네 삼각형 모양 머리를 수직으로 가르는 직선을 그리면 그 직선의 그래프는 a가 0이 아닌 y=ax의 그래프로 나타나는데,\n이때 이 그래프는 a의 값과 관계 없이 반드시 (0, 1)의 점을 지나. 그러니까 네 두개골을 수직으로 가르는 직선을 그어 버리기 전에 조용히 하면 안 될까?"\n\n그때 지나가던 {color=ffd400}한권택{/color}이 이렇게 말했습니다.\n"이차방정식을 푸는 방법 중 하나인 인수분해는 각각 수 또는 식인 A와 B의 곱이 0일 때, A와 B 중 하나는 무조건 0이라는 원리를 이용해."\n\n마지막으로 그들을 발견한 {color=ffd400}오르테{/color}가 말했습니다.\n"어떤 소수를 기약분수로 바꾸어 나타낼 때, 분모의 소인수가 2, 3, 5뿐이면 그것은 유한소수이고 그렇지 않다면 그것은 순환소수야."\n\n\n위 글에서 옳은 말을 한 사람은 누구인지 [[{color=ffd400}제임스, 곽철이, 한권택, 오르테{/color}] 중 맞는 것을 모두 쓰시오.' at truecenter
         $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
         if Answer == "한권택":
@@ -913,7 +913,7 @@ label TechQuiz:
 # ====================================================================================
 
 label Terrace:
-    scene bg terrace
+    scene bg terrace with fade
     if FirstTerrace:
         $ FirstTerrace = False
         c "여기에는 지하실도 있고, 테라스도 있고 별의별 게 다 있냐…"
@@ -959,6 +959,6 @@ label TerraceMenu:
     
 
 label Bedroom:
-    scene bg bedroom
+    scene bg bedroom with fade
     "침실." # 임시
     jump GameClear
