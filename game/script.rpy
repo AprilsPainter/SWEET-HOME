@@ -82,6 +82,8 @@ label start:
 label GameClear:
     scene bg game_clear
     show text "{size=60}{b}탈출에 성공하였습니다!{/b}" at truecenter
+    pause 2.0
+    hide text
 
     menu:
         "처음부터 다시":
@@ -589,22 +591,10 @@ label QuizRoom:
         $ FirstQuizRoom = False
         c "이건 뭐 방탈출 게임도 아니고 퀴즈가 왜 이렇게 많아?"
         c "빨리 풀고 넘어가야겠어."
-
+    
     if Cleared_ArtQuiz and Cleared_KoreanQuiz and Cleared_ScienceQuiz and Cleared_SocietyQuiz and Cleared_HistoryQuiz and Cleared_EnglishQuiz and Cleared_MathQuiz and Cleared_TechQuiz:
         "침실로 가는 문이 열렸다."
         jump QuizRoomMenu
-
-label QuizRoomMenu:
-    menu:
-        "침실로 간다.":
-            jump Bedroom
-        
-        "더 둘러본다.":
-            jump QuizRoomMenu
-        
-        "~~을 조사한다.":   # TODO: 조사 오브젝트 추가
-            "조사했다."
-            jump QuizRoomMenu
 
     menu:
         "테라스 문":
@@ -639,6 +629,51 @@ label QuizRoomMenu:
         "기술가정" if not Cleared_TechQuiz:
             jump TechQuiz
 
+label QuizRoomMenu:
+    menu:
+        "침실 문":
+            "침실로 갈까?"
+            menu:
+                "침실로 간다.":
+                    jump Bedroom
+
+                "더 둘러본다.":
+                    jump QuizRoomMenu
+
+        "테라스 문":
+            "테라스로 갈까?"
+            menu:
+                "테라스로 간다.":
+                    jump Terrace
+
+                "나가지 않는다.":
+                    jump QuizRoomMenu
+
+        "미술" if not Cleared_ArtQuiz:
+            jump ArtQuiz
+
+        "국어" if not Cleared_KoreanQuiz:
+            jump KoreanQuiz
+
+        "과학" if not Cleared_ScienceQuiz:
+            jump ScienceQuiz
+
+        "사회" if not Cleared_SocietyQuiz:
+            jump SocietyQuiz
+
+        "역사" if not Cleared_HistoryQuiz:
+            jump HistoryQuiz
+
+        "영어" if not Cleared_EnglishQuiz:
+            jump EnglishQuiz
+
+        "수학" if not Cleared_MathQuiz:
+            jump MathQuiz
+
+        "기술가정" if not Cleared_TechQuiz:
+            jump TechQuiz
+        
+
 label LifeCheck:
     if QuizLife <= 0:
         $ EndingType = "NoQuizLife"
@@ -649,61 +684,71 @@ label LifeCheck:
         jump QuizRoom
 
 label ArtQuiz:
-    show text "{size=30}{b}[[미술]{/b}\n\n다음은 그림과 관련된 지식입니다. 옳지 않은 것은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. 금속처럼 반짝거리는 재질을 그리려면 검은색이나 어두운 색을 적극적으로 활용해야 한다.\n2. 팝 아트는 대중(Popular)과 예술(Art)의 합성어로 추상적인 기하학적 이미지를 미술 영역으로 수용한 순수미술의 한 경향을 가리킨다.\n3. 이 게임의 디자이너는 세계 최고의 그림러다." at truecenter
-    $ Answer = renpy.input("정답을 입력하세요.").strip()
-    hide text
-    if Answer == "2":
-        show text "{size=30}{b}정답입니다!{/b}" at truecenter
-        pause 1.0
+    if not Cleared_ArtQuiz:
+        show text "{size=30}{b}[[미술]{/b}\n\n다음은 그림과 관련된 지식입니다. 옳지 않은 것은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. 금속처럼 반짝거리는 재질을 그리려면 검은색이나 어두운 색을 적극적으로 활용해야 한다.\n2. 팝 아트는 대중(Popular)과 예술(Art)의 합성어로 추상적인 기하학적 이미지를 미술 영역으로 수용한 순수미술의 한 경향을 가리킨다.\n3. 이 게임의 디자이너는 세계 최고의 그림러다." at truecenter
+        $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
-        $ Cleared_ArtQuiz = True
-        jump QuizRoom
+        if Answer == "2":
+            show text "{size=30}{b}정답입니다!{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ Cleared_ArtQuiz = True
+            jump QuizRoom
+        else:
+            show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ QuizLife -= 1
+            jump LifeCheck
+    
     else:
-        show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
-        pause 1.0
-        hide text
-        $ QuizLife -= 1
-        jump LifeCheck
+        "이미 미술 퀴즈를 통과했습니다."
+        jump QuizRoom
 
 label KoreanQuiz:
+    if not Cleared_KoreanQuiz:
 
-    # 1번 문제 ------------------------------------------------------------------
-    show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n1. 나는 [[곰곰히 / 곰곰이] 생각했다." at truecenter
-    $ Answer = renpy.input("정답을 입력하세요.").strip()
-    hide text
-
-    if Answer == "곰곰이":
-        show text "{size=30}{b}정답입니다!{/b}" at truecenter
-        pause 1.0
+        # 1번 문제 ------------------------------------------------------------------
+        show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n1. 나는 [[곰곰히 / 곰곰이] 생각했다." at truecenter
+        $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
-    else:
-        jump KoreanWrongAnswer
 
-    # 2번 문제 ------------------------------------------------------------------
-    show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n2. [[재작년 / 제작년] 매출보다 높네." at truecenter
-    $ Answer = renpy.input("정답을 입력하세요.").strip()
-    hide text
+        if Answer == "곰곰이":
+            show text "{size=30}{b}정답입니다!{/b}" at truecenter
+            pause 1.0
+            hide text
+        else:
+            jump KoreanWrongAnswer
 
-    if Answer == "재작년":
-        show text "{size=30}{b}정답입니다!{/b}" at truecenter
-        pause 1.0
+        # 2번 문제 ------------------------------------------------------------------
+        show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n2. [[재작년 / 제작년] 매출보다 높네." at truecenter
+        $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
-    else:
-        jump KoreanWrongAnswer
 
-    # 3번 문제 ------------------------------------------------------------------
-    show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n3. [[맞힐 / 맞출] 수 있으면 해봐." at truecenter
-    $ Answer = renpy.input("정답을 입력하세요.").strip()
-    hide text
+        if Answer == "재작년":
+            show text "{size=30}{b}정답입니다!{/b}" at truecenter
+            pause 1.0
+            hide text
+        else:
+            jump KoreanWrongAnswer
 
-    if Answer == "맞힐":
-        show text "{size=30}{b}정답입니다!{/b}" at truecenter
-        pause 1.0
+        # 3번 문제 ------------------------------------------------------------------
+        show text "{size=30}{b}[[국어]{/b}\n\n아래 문장에서 둘 중 옳은 표현은 무엇인가요?\n\n3. [[맞힐 / 맞출] 수 있으면 해봐." at truecenter
+        $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
-        $ Cleared_KoreanQuiz = True
-        jump QuizRoom
+
+        if Answer == "맞힐":
+            show text "{size=30}{b}정답입니다!{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ Cleared_KoreanQuiz = True
+            jump QuizRoom
+        else:
+            jump KoreanWrongAnswer
+    
     else:
-        jump KoreanWrongAnswer
+        "이미 국어 퀴즈를 통과했습니다."
+        jump QuizRoom 
 
 label KoreanWrongAnswer:
 
@@ -721,97 +766,149 @@ label KoreanWrongAnswer:
     jump KoreanQuiz
 
 label ScienceQuiz:
-    show text "{size=30}{b}[[과학]{/b}\n\n다음 화학 반응에서의 세 규칙 중 부피와 관련된 것은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. 질량 보존 법칙\n2. 일정 성분비 법칙\n3. 기체 반응 법칙" at truecenter
-    $ Answer = renpy.input("정답을 입력하세요.").strip()
-    hide text
-    if Answer == "3":
-        show text "{size=30}{b}정답입니다!{/b}" at truecenter
-        pause 1.0
+    if not Cleared_ScienceQuiz:
+        show text "{size=30}{b}[[과학]{/b}\n\n다음 화학 반응에서의 세 규칙 중 부피와 관련된 것은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. 질량 보존 법칙\n2. 일정 성분비 법칙\n3. 기체 반응 법칙" at truecenter
+        $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
-        $ Cleared_ScienceQuiz = True
-        jump QuizRoom
+        if Answer == "3":
+            show text "{size=30}{b}정답입니다!{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ Cleared_ScienceQuiz = True
+            jump QuizRoom
+        else:
+            show text "{size=30}{b}틀렸습니다.{/b}." at truecenter
+            pause 1.0
+            hide text
+            $ QuizLife -= 1
+            jump LifeCheck
+    
     else:
-        show text "{size=30}{b}틀렸습니다.{/b}." at truecenter
-        pause 1.0
-        hide text
-        $ QuizLife -= 1
-        jump LifeCheck
+        "이미 과학 퀴즈를 통과했습니다."
+        jump QuizRoom
 
 label SocietyQuiz:
-    show text "{size=30}{b}[[사회]{/b}\n\n기회비용의 의미로 알맞은 것은 무엇인지 1, 2, 3, 4 중 하나를 쓰세요.\n\n1. 어떤 주식을 매수했을 때 특정 기간 동안의 예상 이익에서 예상 손해액을 뺀 것\n2. 경제에서 여러 선택지 중 하나를 선택했을 때 그 선택으로 인해 포기해야 하는 대안 중 가장 가치가 큰 것\n3. 어떤 후보자가 특정 선거 전략을 펼쳤을 때 그로 인해 지지를 철회하는 지지자의 수와 선거 비용의 합\n4. 경제에서 이미 지출되어 어떤 선택을 하더라도 되돌릴 수 없는 비용" at truecenter
-    $ Answer = renpy.input("정답을 입력하세요.").strip()
-    hide text
-    if Answer == "2":
-        show text "{size=30}{b}정답입니다!{/b}" at truecenter
-        pause 1.0
+    if not Cleared_SocietyQuiz:
+        show text "{size=30}{b}[[사회]{/b}\n\n기회비용의 의미로 알맞은 것은 무엇인지 1, 2, 3, 4 중 하나를 쓰세요.\n\n1. 어떤 주식을 매수했을 때 특정 기간 동안의 예상 이익에서 예상 손해액을 뺀 것\n2. 경제에서 여러 선택지 중 하나를 선택했을 때 그 선택으로 인해 포기해야 하는 대안 중 가장 가치가 큰 것\n3. 어떤 후보자가 특정 선거 전략을 펼쳤을 때 그로 인해 지지를 철회하는 지지자의 수와 선거 비용의 합\n4. 경제에서 이미 지출되어 어떤 선택을 하더라도 되돌릴 수 없는 비용" at truecenter
+        $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
-        $ Cleared_SocietyQuiz = True
-        jump QuizRoom
+        if Answer == "2":
+            show text "{size=30}{b}정답입니다!{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ Cleared_SocietyQuiz = True
+            jump QuizRoom
+        else:
+            show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ QuizLife -= 1
+            jump LifeCheck
+        
     else:
-        show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
-        pause 1.0
-        hide text
-        $ QuizLife -= 1
-        jump LifeCheck
+        "이미 사회 퀴즈를 통과했습니다."
+        jump QuizRoom
 
 label HistoryQuiz:
-    show text "{size=30}{b}[[역사]{/b}\n\n사건과 설명이 옳지 않게 짝지어진 것은 무엇인지 1, 2, 3, 4, 5 중 하나를 쓰세요.\n\n1. 제주 4.3 사건: 경찰 발포 사건으로 시작된 제주 주민들의 무장 봉기에 대해 미군정과 예하의 국군, 경찰이 자행한 민간인 학살 사건\n2. 동학 농민 혁명: 전봉준을 중심으로 한 농민들이 탐관오리의 착취와 외세의 침략에 저항하며 개혁을 요구한 농민 봉기\n3. 3.1 운동: 한반도 전역과 세계 각지의 한인 밀집 지역에서 시민들이 독립을 선언하며 일제의 강점에 저항권을 행사한 시민 불복종 운동이자 독립운동\n4.  6.25 전쟁: 북한 공산 정권이 한반도 적화 통일을 목적으로 선전포고 없이 38선을 넘어 남침하여 시작된 전쟁\n5. 6월 항쟁: 전두환 정권의 장기집권 의도에 시민들이 ’호헌철폐 독재타도 민주쟁취‘ 등을 외치며 일어났으나, 대통령 직선제를 쟁취하는 데는 실패한 민주화 운동" at truecenter
-    $ Answer = renpy.input("정답을 입력하세요.").strip()
-    hide text
-    if Answer == "5":
-        show text "{size=30}{b}정답입니다!{/b}" at truecenter
-        pause 1.0
+    if not Cleared_HistoryQuiz:
+        show text "{size=30}{b}[[역사]{/b}\n\n사건과 설명이 옳지 않게 짝지어진 것은 무엇인지 1, 2, 3, 4, 5 중 하나를 쓰세요.\n\n1. 제주 4.3 사건: 경찰 발포 사건으로 시작된 제주 주민들의 무장 봉기에 대해 미군정과 예하의 국군, 경찰이 자행한 민간인 학살 사건\n2. 동학 농민 혁명: 전봉준을 중심으로 한 농민들이 탐관오리의 착취와 외세의 침략에 저항하며 개혁을 요구한 농민 봉기\n3. 3.1 운동: 한반도 전역과 세계 각지의 한인 밀집 지역에서 시민들이 독립을 선언하며 일제의 강점에 저항권을 행사한 시민 불복종 운동이자 독립운동\n4.  6.25 전쟁: 북한 공산 정권이 한반도 적화 통일을 목적으로 선전포고 없이 38선을 넘어 남침하여 시작된 전쟁\n5. 6월 항쟁: 전두환 정권의 장기집권 의도에 시민들이 ’호헌철폐 독재타도 민주쟁취‘ 등을 외치며 일어났으나, 대통령 직선제를 쟁취하는 데는 실패한 민주화 운동" at truecenter
+        $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
-        $ Cleared_HistoryQuiz = True
-        jump QuizRoom
+        if Answer == "5":
+            show text "{size=30}{b}정답입니다!{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ Cleared_HistoryQuiz = True
+            jump QuizRoom
+        else:
+            show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ QuizLife -= 1
+            jump LifeCheck
+
     else:
-        show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
-        pause 1.0
-        hide text
-        $ QuizLife -= 1
-        jump LifeCheck
+        "이미 역사 퀴즈를 통과했습니다."
+        jump QuizRoom
 
 label EnglishQuiz:
-    show text "{size=30}{b}[[영어]{/b}\n\n다음 중 어법적으로 옳은 문장은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. Never have I been to Korea.\n2. What you said yesterday were so terrible that I almost threw up.\n3. Do you know what he told to me?" at truecenter
-    $ Answer = renpy.input("정답을 입력하세요.").strip()
-    hide text
-    if Answer == "1":
-        show text "{size=30}{b}정답입니다!{/b}" at truecenter
-        pause 1.0
+    if not Cleared_EnglishQuiz:
+        show text "{size=30}{b}[[영어]{/b}\n\n다음 중 어법적으로 옳은 문장은 무엇인지 1, 2, 3 중 하나를 쓰세요.\n\n1. Never have I been to Korea.\n2. What you said yesterday were so terrible that I almost threw up.\n3. Do you know what he told to me?" at truecenter
+        $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
-        $ Cleared_EnglishQuiz = True
-        jump QuizRoom
+        if Answer == "1":
+            show text "{size=30}{b}정답입니다!{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ Cleared_EnglishQuiz = True
+            jump QuizRoom
+        else:
+            show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ QuizLife -= 1
+            jump LifeCheck
+
     else:
-        show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
-        pause 1.0
-        hide text
-        $ QuizLife -= 1
-        jump LifeCheck
+        "이미 영어 퀴즈를 통과했습니다."
+        jump QuizRoom
 
 label MathQuiz:
-    show text '{size=30}{b}[[수학]{/b}\n\n곽철이와 제임스가 함께 급식을 먹으러 가고 있었습니다.\n{b}제임스{/b}가 학생 A와 B의 삼각형 모양 머리를 보고 이렇게 말했습니다.\n"학생 A의 머리의 한 각이 학생 B의 머리의 한 각과 같고, 그 각들의 대변의 길이가 각각 같으므로 학생 A의 머리와 학생 B의 머리는 합동이야."\n\n그러자 {b}곽철이{/b}가 이렇게 말했습니다.\n"네 삼각형 모양 머리를 수직으로 가르는 직선을 그리면 그 직선의 그래프는 a가 0이 아닌 y=ax의 그래프로 나타나는데,\n이때 이 그래프는 a의 값과 관계 없이 반드시 (0, 1)의 점을 지나. 그러니까 네 두개골을 수직으로 가르는 직선을 그어 버리기 전에 조용히 하면 안 될까?"\n\n그때 지나가던 {b}한권택{/b}이 이렇게 말했습니다.\n"이차방정식을 푸는 방법 중 하나인 인수분해는 각각 수 또는 식인 A와 B의 곱이 0일 때, A와 B 중 하나는 무조건 0이라는 원리를 이용해."\n\n마지막으로 그들을 발견한 {b}오르테{/b}가 말했습니다.\n"어떤 소수를 기약분수로 바꾸어 나타낼 때, 분모의 소인수가 2, 3, 5뿐이면 그것은 유한소수이고 그렇지 않다면 그것은 순환소수야."\n\n\n위 글에서 옳은 말을 한 사람은 누구인지 [[{b}제임스, 곽철이, 한권택, 오르테{/b}] 중 맞는 것을 모두 쓰시오.' at truecenter
-    $ Answer = renpy.input("정답을 입력하세요.").strip()
-    hide text
-    if Answer == "한권택":
-        show text "{size=30}{b}정답입니다!{/b}" at truecenter
-        pause 1.0
+    if not Cleared_MathQuiz:
+        show text '{size=30}{b}[[수학]{/b}\n\n곽철이와 제임스가 함께 급식을 먹으러 가고 있었습니다.\n{b}제임스{/b}가 학생 A와 B의 삼각형 모양 머리를 보고 이렇게 말했습니다.\n"학생 A의 머리의 한 각이 학생 B의 머리의 한 각과 같고, 그 각들의 대변의 길이가 각각 같으므로 학생 A의 머리와 학생 B의 머리는 합동이야."\n\n그러자 {b}곽철이{/b}가 이렇게 말했습니다.\n"네 삼각형 모양 머리를 수직으로 가르는 직선을 그리면 그 직선의 그래프는 a가 0이 아닌 y=ax의 그래프로 나타나는데,\n이때 이 그래프는 a의 값과 관계 없이 반드시 (0, 1)의 점을 지나. 그러니까 네 두개골을 수직으로 가르는 직선을 그어 버리기 전에 조용히 하면 안 될까?"\n\n그때 지나가던 {b}한권택{/b}이 이렇게 말했습니다.\n"이차방정식을 푸는 방법 중 하나인 인수분해는 각각 수 또는 식인 A와 B의 곱이 0일 때, A와 B 중 하나는 무조건 0이라는 원리를 이용해."\n\n마지막으로 그들을 발견한 {b}오르테{/b}가 말했습니다.\n"어떤 소수를 기약분수로 바꾸어 나타낼 때, 분모의 소인수가 2, 3, 5뿐이면 그것은 유한소수이고 그렇지 않다면 그것은 순환소수야."\n\n\n위 글에서 옳은 말을 한 사람은 누구인지 [[{b}제임스, 곽철이, 한권택, 오르테{/b}] 중 맞는 것을 모두 쓰시오.' at truecenter
+        $ Answer = renpy.input("정답을 입력하세요.").strip()
         hide text
-        $ Cleared_MathQuiz = True
-        jump QuizRoom
+        if Answer == "한권택":
+            show text "{size=30}{b}정답입니다!{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ Cleared_MathQuiz = True
+            jump QuizRoom
+        else:
+            show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
+            pause 1.0
+            hide text
+            $ QuizLife -= 1
+            jump LifeCheck
+    
     else:
-        show text "{size=30}{b}틀렸습니다.{/b}" at truecenter
-        pause 1.0
-        hide text
-        $ QuizLife -= 1
-        jump LifeCheck
+        "이미 수학 퀴즈를 통과했습니다."
+        jump QuizRoom
 
 label TechQuiz:
-    show text "{size=30}{b}[[기술]{/b}\n\n벌꿀을 채취해 오세요." at truecenter
-    menu:
-        "뒤로 가기":
-            hide text
-            jump QuizRoom
+    if not Cleared_TechQuiz:
+        show text "{size=30}{b}[[기술]{/b}\n\n벌꿀을 채취해 오세요." at truecenter
+        pause 2.0
+        hide text
+        menu:
+            "뒤로 가기":
+                jump QuizRoom
 
+            "유리병 가져가기":
+                if GlassBottle or Honey_GlassBottle:
+                    "유리병을 이미 보유하고 있습니다."
+                    jump QuizRoom
+            
+                else:
+                    "유리병을 얻었습니다."
+                    $ GlassBottle = True
+                    jump QuizRoom
+            
+            "꿀이 든 병 제출하기":
+                if Honey_GlassBottle:
+                    "기술 가정 퀴즈를 통과했습니다."
+                    $ Cleared_TechQuiz = True
+                    $ Honey_GlassBottle = False
+                    jump QuizRoom
+            
+                else:
+                    "꿀이 든 병을 보유하고 있지 않습니다."
+                    jump QuizRoom
+        
+    else:
+        "이미 기술가정 퀴즈를 통과했습니다."
+        jump QuizRoom
+        
 # ====================================================================================
 
 label Terrace:
@@ -836,10 +933,31 @@ label TerraceMenu:
                     jump TerraceMenu
 
         "벌집":
-            "벌집을 조사했다." # 임시
+            if GlassBottle:
+                menu:
+                    "벌꿀을 채취한다.":
+                        $ Honey_GlassBottle = True
+                        $ GlassBottle = False
+                        "꿀이 든 병을 얻었습니다."
+                        jump  TerraceMenu
+
+                    "채취하지 않는다.":
+                        jump TerraceMenu
+                
+            elif Honey_GlassBottle:
+                "이미 벌꿀을 채취했습니다."
+                jump TerraceMenu
+            
+            else:
+                "벌꿀을 채취하려면 유리병이 필요합니다."
+                jump TerraceMenu
+
+        "오브젝트":
+            "~~을 조사했습니다."
             jump TerraceMenu
     
 
 label Bedroom:
     scene bg bedroom
     "침실." # 임시
+    jump GameClear
