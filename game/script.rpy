@@ -72,12 +72,16 @@ image yeonsal smile = Transform("images/characters/yeonsal_smile.png", zoom=0.47
 # 아이템/오브젝트 이미지 정의 -----------------------------------------------
 
 
+# 사운드 정의 --------------------------------------------------------------
+define kkang = "audio/kkang.mp3"
+define mimi = "audio/mimi.mp3"
+define door = "audio/door.mp3"
+define key = "audio/key.mp3"
+define knife = "audio/knife.mp3"
+define walk = "audio/walk.mp3"
+define boom = "audio/boom.wav"
+
 # 배경 이미지 정의
-image main_menu_video = Movie(
-    play="images/backgrounds/main_menu.ogv",
-    size=(1920, 1080),
-    loop=True
-)
 image bg alley = Transform("images/backgrounds/alley.png", xysize=(1920, 1080))
 image bg bedroom = Transform("images/backgrounds/bedroom.png", xysize=(1920, 1080))
 image bg cellar = Transform("images/backgrounds/cellar.png", xysize=(1920, 1080))
@@ -173,6 +177,7 @@ label Alley:
     c "(근데 집 가는 길이 왜 이렇게 외진 곳이지?)"
     c "(이러다 괴한한테 머리 한 대 맞고 납치당하는 거 아냐?)"
     c "(나도 참 별 생각을 다 하네…)"
+    play sound kkang
     "깡!" with vpunch
     c "윽…!"
 
@@ -247,6 +252,7 @@ label Suitcase:
     c "열쇠다!" with hpunch
     c "이거라면 문을 열 수 있지 않을까?"
     hide chunbae with dissolve
+    play sound key
     "{b}{color=ffd400}지하실 열쇠{/color}{/b}를 획득했습니다."
 
     $ CellarKey = True
@@ -267,7 +273,8 @@ label DoorWithoutCellarKey:
             if  HP <= 0:
                 $ EndingType = "NoHP"
                 jump GameOver
-
+            
+            play sound boom
             show chunbae panic with dissolve
             c "윽! 겁나 아프네…"
             show chunbae normal
@@ -287,6 +294,7 @@ label DoorWithCellarKey:
     show chunbae normal with dissolve
     c "제발 이 열쇠가 맞기를…"
     show chunbae shy
+    play audio door
     c "열렸다!"
     c "드디어 이 지긋지긋한 공간에서 나갈 수 있어!"
     hide chunbae with dissolve
@@ -294,6 +302,7 @@ label DoorWithCellarKey:
     jump Corridor
 
 label Corridor:
+    play sound walk
     scene bg corridor with Fade(0.5, 1.0, 1.0)
     if FirstCorridor:
         $ FirstCorridor = False
@@ -335,6 +344,7 @@ label CorridorMenu:
                 "문을 열어볼까?"
                 menu:
                     "문을 연다.":
+                        play sound door
                         jump Storage
 
                     "문을 열지 않는다.":
@@ -376,6 +386,7 @@ label DiningRoomMenu:
             "식당에서 나갈까?"
             menu:
                 "식당에서 나간다.":
+                    play sound door
                     jump Corridor
 
                 "더 둘러본다.":
@@ -391,6 +402,7 @@ label DiningRoomMenu:
             "화장실에 들어갈까?"
             menu:
                 "들어간다.":
+                    play sound door
                     jump Restroom
 
                 "다른 곳을 둘러본다.":
@@ -400,6 +412,7 @@ label DiningRoomMenu:
             "부엌에 들어갈까?"
             menu:
                 "들어간다.":
+                    play sound door
                     jump Kitchen
 
                 "다른 곳을 둘러본다.":
@@ -422,6 +435,7 @@ label StrawberryCake:
                 $ Checked_StrawberryCake = True
                 show chunbae normal with dissolve
                 c "…"
+                play music mimi
                 show chunbae shy
                 c "오! 맛있다."
                 hide chunbae with dissolve
@@ -496,6 +510,7 @@ label Restroom:
             "1번 칸":
                 "당신은 1번 칸으로 잽싸게 들어갔다."
                 "..."
+                play sound walk
                 "발걸음 소리가 가까워졌다가, 다시 멀어진다..."
                 c "(죽을 뻔했네. 앞으로는 플래그를 세우는 대사 따위 뱉지 않겠어.)"
 
@@ -505,6 +520,7 @@ label Restroom:
             "2번 칸":
                 "당신은 2번 칸으로 잽싸게 들어갔다."
                 "..."
+                play sound walk
                 "발걸음 소리가 가까워진다..."
                 c "아?"
 
@@ -514,6 +530,7 @@ label Restroom:
             "3번 칸":
                 "당신은 3번 칸으로 잽싸게 들어갔다."
                 "..."
+                play sound walk
                 "발걸음 소리가 가까워진다..."
                 c "아?"
 
@@ -526,6 +543,7 @@ label Restroom:
                 "화장실에서 나가시겠습니까?"
                 menu:
                     "화장실에서 나간다.":
+                        play sound door
                         jump DiningRoomMenu
 
                     "더 둘러본다.":
@@ -565,6 +583,7 @@ label KitchenMenu:
             "부엌에서 나갈까?"
             menu:
                 "부엌에서 나간다.":
+                    play sound door
                     jump DiningRoomMenu
 
                 "더 둘러본다.":
@@ -599,6 +618,7 @@ label KitchenMenu:
 label Knife:
     if FirstKnife:
         $ FirstKnife = False
+        play sound knife
         c "악!"
         $ HP = max(HP - 20, 0)
         "{color=66ff66}칼에 손이 베여 HP가 20 감소했습니다.{/color}"
@@ -692,6 +712,7 @@ label QuizRoom:
         hide chunbae with dissolve
     
     if Cleared_ArtQuiz and Cleared_KoreanQuiz and Cleared_ScienceQuiz and Cleared_SocietyQuiz and Cleared_HistoryQuiz and Cleared_EnglishQuiz and Cleared_MathQuiz and Cleared_TechQuiz:
+        play music mimi
         "침실로 가는 문이 열렸다."
         jump QuizRoomMenu
 
@@ -735,6 +756,7 @@ label QuizRoomMenu:
             "침실로 갈까?"
             menu:
                 "침실로 간다.":
+                    play sound door
                     jump Bedroom
 
                 "더 둘러본다.":
